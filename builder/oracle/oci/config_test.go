@@ -1,4 +1,4 @@
-package bmcs
+package oci
 
 import (
 	"io/ioutil"
@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	client "github.com/hashicorp/packer/builder/oracle/bmcs/client"
+	client "github.com/hashicorp/packer/builder/oracle/oci/client"
 )
 
 func testConfig(accessConfFile *os.File) map[string]interface{} {

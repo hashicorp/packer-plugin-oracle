@@ -1,8 +1,8 @@
-package bmcs
+package oci
 
 import (
 	"fmt"
-	client "github.com/hashicorp/packer/builder/oracle/bmcs/client"
+	client "github.com/hashicorp/packer/builder/oracle/oci/client"
 )
 
 // Artifact is an artifact implementation that contains a built Custom Image.

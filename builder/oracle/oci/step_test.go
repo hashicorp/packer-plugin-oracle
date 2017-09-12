@@ -1,4 +1,4 @@
-package bmcs
+package oci
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"github.com/hashicorp/packer/packer"
 	"github.com/mitchellh/multistep"
 
-	client "github.com/hashicorp/packer/builder/oracle/bmcs/client"
+	client "github.com/hashicorp/packer/builder/oracle/oci/client"
 )
 
 // TODO(apryde): It would be good not to have to write a key file to disk to

@@ -1,30 +1,30 @@
-package bmcs
+package oci
 
 import (
 	"errors"
 	"fmt"
 
-	client "github.com/hashicorp/packer/builder/oracle/bmcs/client"
+	client "github.com/hashicorp/packer/builder/oracle/oci/client"
 )
 
-// driverBMCS implements the Driver interface and communicates with Oracle
-// BMCS.
-type driverBMCS struct {
+// driverOCI implements the Driver interface and communicates with Oracle
+// OCI.
+type driverOCI struct {
 	client *client.Client
 	cfg    *Config
 }
 
-// NewDriverBMCS Creates a new driverBMCS with a connected client.
-func NewDriverBMCS(cfg *Config) (Driver, error) {
+// NewDriverOCI Creates a new driverOCI with a connected client.
+func NewDriverOCI(cfg *Config) (Driver, error) {
 	client, err := client.NewClient(cfg.AccessCfg)
 	if err != nil {
 		return nil, err
 	}
-	return &driverBMCS{client: client, cfg: cfg}, nil
+	return &driverOCI{client: client, cfg: cfg}, nil
 }
 
 // CreateInstance creates a new compute instance.
-func (d *driverBMCS) CreateInstance(publicKey string) (string, error) {
+func (d *driverOCI) CreateInstance(publicKey string) (string, error) {
 	params := &client.LaunchInstanceParams{
 		AvailabilityDomain: d.cfg.AvailabilityDomain,
 		CompartmentID:      d.cfg.CompartmentID,
@@ -44,7 +44,7 @@ func (d *driverBMCS) CreateInstance(publicKey string) (string, error) {
 }
 
 // CreateImage creates a new custom image.
-func (d *driverBMCS) CreateImage(id string) (client.Image, error) {
+func (d *driverOCI) CreateImage(id string) (client.Image, error) {
 	params := &client.CreateImageParams{
 		CompartmentID: d.cfg.CompartmentID,
 		InstanceID:    id,
@@ -59,12 +59,12 @@ func (d *driverBMCS) CreateImage(id string) (client.Image, error) {
 }
 
 // DeleteImage deletes a custom image.
-func (d *driverBMCS) DeleteImage(id string) error {
+func (d *driverOCI) DeleteImage(id string) error {
 	return d.client.Compute.Images.Delete(&client.DeleteImageParams{ID: id})
 }
 
 // GetInstanceIP returns the public IP corresponding to the given instance id.
-func (d *driverBMCS) GetInstanceIP(id string) (string, error) {
+func (d *driverOCI) GetInstanceIP(id string) (string, error) {
 	// get nvic and cross ref to find pub ip address
 	vnics, err := d.client.Compute.VNICAttachments.List(
 		&client.ListVnicAttachmentsParams{
@@ -89,14 +89,14 @@ func (d *driverBMCS) GetInstanceIP(id string) (string, error) {
 }
 
 // TerminateInstance terminates a compute instance.
-func (d *driverBMCS) TerminateInstance(id string) error {
+func (d *driverOCI) TerminateInstance(id string) error {
 	params := &client.TerminateInstanceParams{ID: id}
 	return d.client.Compute.Instances.Terminate(params)
 }
 
 // WaitForImageCreation waits for a provisioning custom image to reach the
 // "AVAILABLE" state.
-func (d *driverBMCS) WaitForImageCreation(id string) error {
+func (d *driverOCI) WaitForImageCreation(id string) error {
 	return client.NewWaiter().WaitForResourceToReachState(
 		d.client.Compute.Images,
 		id,
@@ -107,7 +107,7 @@ func (d *driverBMCS) WaitForImageCreation(id string) error {
 
 // WaitForInstanceState waits for an instance to reach the a given terminal
 // state.
-func (d *driverBMCS) WaitForInstanceState(id string, waitStates []string, terminalState string) error {
+func (d *driverOCI) WaitForInstanceState(id string, waitStates []string, terminalState string) error {
 	return client.NewWaiter().WaitForResourceToReachState(
 		d.client.Compute.Instances,
 		id,

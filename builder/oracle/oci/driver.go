@@ -1,10 +1,10 @@
-package bmcs
+package oci
 
 import (
-	client "github.com/hashicorp/packer/builder/oracle/bmcs/client"
+	client "github.com/hashicorp/packer/builder/oracle/oci/client"
 )
 
-// Driver interfaces between the builder steps and the BMCS SDK.
+// Driver interfaces between the builder steps and the OCI SDK.
 type Driver interface {
 	CreateInstance(publicKey string) (string, error)
 	CreateImage(id string) (client.Image, error)
