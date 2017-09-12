@@ -1,12 +1,12 @@
-// Package bmcs contains a packer.Builder implementation that builds Oracle
-// Bare Metal Cloud Services (BMCS) images.
-package bmcs
+// Package oci contains a packer.Builder implementation that builds Oracle
+// Bare Metal Cloud Services (OCI) images.
+package oci
 
 import (
 	"fmt"
 	"log"
 
-	client "github.com/hashicorp/packer/builder/oracle/bmcs/client"
+	client "github.com/hashicorp/packer/builder/oracle/oci/client"
 	"github.com/hashicorp/packer/common"
 	"github.com/hashicorp/packer/helper/communicator"
 	"github.com/hashicorp/packer/packer"
@@ -14,12 +14,12 @@ import (
 )
 
 // BuilderId uniquely identifies the builder
-const BuilderId = "packer.oracle.bmcs"
+const BuilderId = "packer.oracle.oci"
 
-// BMCS API version
-const bmcsAPIVersion = "20160918"
+// OCI API version
+const ociAPIVersion = "20160918"
 
-// Builder is a builder implementation that creates Oracle BMCS custom images.
+// Builder is a builder implementation that creates Oracle OCI custom images.
 type Builder struct {
 	config *Config
 	runner multistep.Runner
@@ -36,7 +36,7 @@ func (b *Builder) Prepare(rawConfig ...interface{}) ([]string, error) {
 }
 
 func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packer.Artifact, error) {
-	driver, err := NewDriverBMCS(b.config)
+	driver, err := NewDriverOCI(b.config)
 	if err != nil {
 		return nil, err
 	}
@@ -52,7 +52,7 @@ func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packe
 	steps := []multistep.Step{
 		&stepKeyPair{
 			Debug:          b.config.PackerDebug,
-			DebugKeyPath:   fmt.Sprintf("bmcs_%s.pem", b.config.PackerBuildName),
+			DebugKeyPath:   fmt.Sprintf("oci_%s.pem", b.config.PackerBuildName),
 			PrivateKeyFile: b.config.Comm.SSHPrivateKey,
 		},
 		&stepCreateInstance{},

@@ -1,11 +1,11 @@
-package bmcs
+package oci
 
 import (
-	client "github.com/hashicorp/packer/builder/oracle/bmcs/client"
+	client "github.com/hashicorp/packer/builder/oracle/oci/client"
 )
 
 // driverMock implements the Driver interface and communicates with Oracle
-// BMCS.
+// OCI.
 type driverMock struct {
 	CreateInstanceID  string
 	CreateInstanceErr error

@@ -1,4 +1,4 @@
-package bmcs
+package oci
 
 import (
 	"fmt"

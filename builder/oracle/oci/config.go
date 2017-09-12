@@ -1,4 +1,4 @@
-package bmcs
+package oci
 
 import (
 	"errors"
@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	client "github.com/hashicorp/packer/builder/oracle/bmcs/client"
+	client "github.com/hashicorp/packer/builder/oracle/oci/client"
 	"github.com/hashicorp/packer/common"
 	"github.com/hashicorp/packer/helper/communicator"
 	"github.com/hashicorp/packer/helper/config"
@@ -64,7 +64,7 @@ func NewConfig(raws ...interface{}) (*Config, error) {
 	if c.AccessCfgFile != "" {
 		accessCfgFile = c.AccessCfgFile
 	} else {
-		accessCfgFile, err = getDefaultBMCSSettingsPath()
+		accessCfgFile, err = getDefaultOCISettingsPath()
 		if err != nil {
 			accessCfgFile = "" // Access cfg might be in template
 		}
@@ -198,15 +198,15 @@ func NewConfig(raws ...interface{}) (*Config, error) {
 	return c, nil
 }
 
-// getDefaultBMCSSettingsPath uses mitchellh/go-homedir to compute the default
-// config file location.
-func getDefaultBMCSSettingsPath() (string, error) {
+// getDefaultOCISettingsPath uses mitchellh/go-homedir to compute the default
+// config file location ($HOME/.oci/config).
+func getDefaultOCISettingsPath() (string, error) {
 	home, err := homedir.Dir()
 	if err != nil {
 		return "", err
 	}
 
-	path := filepath.Join(home, ".oraclebmc", "config")
+	path := filepath.Join(home, ".oci", "config")
 	if _, err := os.Stat(path); err != nil {
 		return "", err
 	}
