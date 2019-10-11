@@ -1,33 +1,34 @@
-package oci
+package common
 
 import (
+	"context"
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"runtime"
 
+	"github.com/hashicorp/packer/helper/communicator"
+	"github.com/hashicorp/packer/helper/multistep"
 	"github.com/hashicorp/packer/packer"
-	"github.com/mitchellh/multistep"
 	"golang.org/x/crypto/ssh"
 )
 
-type stepKeyPair struct {
-	Debug          bool
-	DebugKeyPath   string
-	PrivateKeyFile string
+type StepKeyPair struct {
+	Debug        bool
+	Comm         *communicator.Config
+	DebugKeyPath string
 }
 
-func (s *stepKeyPair) Run(state multistep.StateBag) multistep.StepAction {
+func (s *StepKeyPair) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	ui := state.Get("ui").(packer.Ui)
 
-	if s.PrivateKeyFile != "" {
-		privateKeyBytes, err := ioutil.ReadFile(s.PrivateKeyFile)
+	if s.Comm.SSHPrivateKeyFile != "" {
+		ui.Say("Using existing SSH private key")
+		privateKeyBytes, err := s.Comm.ReadSSHPrivateKeyFile()
 		if err != nil {
-			err = fmt.Errorf("Error loading configured private key file: %s", err)
 			ui.Error(err.Error())
 			state.Put("error", err)
 			return multistep.ActionHalt
@@ -41,8 +42,8 @@ func (s *stepKeyPair) Run(state multistep.StateBag) multistep.StepAction {
 			return multistep.ActionHalt
 		}
 
-		state.Put("publicKey", string(ssh.MarshalAuthorizedKey(key.PublicKey())))
-		state.Put("privateKey", string(privateKeyBytes))
+		s.Comm.SSHPublicKey = ssh.MarshalAuthorizedKey(key.PublicKey())
+		s.Comm.SSHPrivateKey = privateKeyBytes
 
 		return multistep.ActionContinue
 	}
@@ -73,8 +74,7 @@ func (s *stepKeyPair) Run(state multistep.StateBag) multistep.StepAction {
 		return multistep.ActionHalt
 	}
 
-	pubSSHFormat := string(ssh.MarshalAuthorizedKey(pub))
-	state.Put("publicKey", pubSSHFormat)
+	s.Comm.SSHPublicKey = ssh.MarshalAuthorizedKey(pub)
 
 	// If we're in debug mode, output the private key to the working
 	// directory.
@@ -111,6 +111,6 @@ func (s *stepKeyPair) Run(state multistep.StateBag) multistep.StepAction {
 	return multistep.ActionContinue
 }
 
-func (s *stepKeyPair) Cleanup(state multistep.StateBag) {
+func (s *StepKeyPair) Cleanup(state multistep.StateBag) {
 	// Nothing to do
 }

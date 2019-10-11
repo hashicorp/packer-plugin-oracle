@@ -1,17 +1,15 @@
-package oci
+package classic
 
 import (
-	"context"
 	"fmt"
-
-	"github.com/oracle/oci-go-sdk/core"
 )
 
-// Artifact is an artifact implementation that contains a built Custom Image.
+// Artifact is an artifact implementation that contains Image List
+// and Machine Image info.
 type Artifact struct {
-	Image  core.Image
-	Region string
-	driver Driver
+	MachineImageName string
+	MachineImageFile string
+	ImageListVersion int
 }
 
 // BuilderId uniquely identifies the builder.
@@ -25,29 +23,23 @@ func (a *Artifact) Files() []string {
 	return nil
 }
 
-// Id returns the OCID of the associated Image.
 func (a *Artifact) Id() string {
-	return *a.Image.Id
+	return a.MachineImageName
 }
 
 func (a *Artifact) String() string {
-	var displayName string
-	if a.Image.DisplayName != nil {
-		displayName = *a.Image.DisplayName
-	}
-
-	return fmt.Sprintf(
-		"An image was created: '%v' (OCID: %v) in region '%v'",
-		displayName, *a.Image.Id, a.Region,
-	)
+	return fmt.Sprintf("An image list entry was created: \n"+
+		"Name: %s\n"+
+		"File: %s\n"+
+		"Version: %d",
+		a.MachineImageName, a.MachineImageFile, a.ImageListVersion)
 }
 
-// State ...
 func (a *Artifact) State(name string) interface{} {
 	return nil
 }
 
 // Destroy deletes the custom image associated with the artifact.
 func (a *Artifact) Destroy() error {
-	return a.driver.DeleteImage(context.TODO(), *a.Image.Id)
+	return nil
 }
