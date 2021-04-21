@@ -196,6 +196,34 @@ Here is a basic example. Note that account specific configuration has been
 obfuscated; you will need to add a working `username`, `password`,
 `identity_domain`, and `api_endpoint` in order for the example to work.
 
+<Tabs>
+<Tab heading="HCL2">
+```hcl
+locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
+
+source "oracle-classic" "basic" {
+  api_endpoint      = "https://api-###.compute.###.oraclecloud.com/"
+  attributes        = "{\"userdata\": {\"pre-bootstrap\": {\"script\": [\"...\"]}}}"
+  dest_image_list   = "Packer_Builder_Test_List"
+  identity_domain   = "#######"
+  image_name        = "Packer_Builder_Test_${local.timestamp}"
+  password          = "supersecretpasswordhere"
+  shape             = "oc3"
+  source_image_list = "/oracle/public/OL_7.2_UEKR4_x86_64"
+  username          = "myuser@myaccount.com"
+}
+
+build {
+  sources = ["source.oracle-classic.basic"]
+
+  provisioner "shell" {
+    inline = ["echo hello"]
+  }
+
+}
+```
+</Tab>
+<Tab heading="JSON">
 ```json
 {
   "builders": [
@@ -220,6 +248,9 @@ obfuscated; you will need to add a working `username`, `password`,
   ]
 }
 ```
+</Tab>
+</Tabs>
+
 
 ## Basic Example -- Windows
 
@@ -248,6 +279,59 @@ Save this file as `windows_attributes.json`:
 Following is a minimal but working Packer config that references this
 attributes file:
 
+<Tabs>
+<Tab heading="HCL2">
+```hcl
+
+variable "opc_api_endpoint" {
+  type    = string
+  default = "${env("OPC_ENDPOINT")}"
+}
+
+variable "opc_identity_domain" {
+  type    = string
+  default = "${env("OPC_IDENTITY_DOMAIN")}"
+}
+
+variable "opc_password" {
+  type    = string
+  default = "${env("OPC_PASSWORD")}"
+}
+
+variable "opc_username" {
+  type    = string
+  default = "${env("OPC_USERNAME")}"
+}
+
+locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
+
+source "oracle-classic" "windows_attrs" {
+  api_endpoint      = "${var.opc_api_endpoint}"
+  attributes_file   = "./windows_attributes.json"
+  communicator      = "winrm"
+  dest_image_list   = "Packer_Windows_Demo"
+  identity_domain   = "${var.opc_identity_domain}"
+  image_name        = "Packer_Windows_Demo_${local.timestamp}"
+  password          = "${var.opc_password}"
+  shape             = "oc3"
+  source_image_list = "/Compute-${var.opc_identity_domain}/${var.opc_username}/Microsoft_Windows_Server_2012_R2-17.3.6-20170930-124649"
+  username          = "${var.opc_username}"
+  winrm_password    = "password"
+  winrm_username    = "Administrator"
+}
+
+build {
+  sources = ["source.oracle-classic.windows_attrs"]
+
+  provisioner "powershell" {
+    inline = "Write-Output(\"HELLO WORLD\")"
+  }
+
+}
+
+```
+</Tab>
+<Tab heading="JSON">
 ```json
 {
   "variables": {
@@ -281,12 +365,65 @@ attributes file:
   ]
 }
 ```
+</Tab>
+</Tabs>
 
 ## Persistent Volume Example
 
 Here is an example using a persistent volume. Note the `persistent_volume_size`
 setting.
 
+<Tabs>
+<Tab heading="HCL2">
+```hcl
+
+variable "opc_api_endpoint" {
+  type    = string
+  default = "${env("OPC_ENDPOINT")}"
+}
+
+variable "opc_identity_domain" {
+  type    = string
+  default = "${env("OPC_IDENTITY_DOMAIN")}"
+}
+
+variable "opc_password" {
+  type    = string
+  default = "${env("OPC_PASSWORD")}"
+}
+
+variable "opc_username" {
+  type    = string
+  default = "${env("OPC_USERNAME")}"
+}
+
+locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
+
+source "oracle-classic" "persistent" {
+  api_endpoint           = "${var.opc_api_endpoint}"
+  dest_image_list        = "Packer_Builder_Test_List"
+  identity_domain        = "${var.opc_identity_domain}"
+  image_name             = "Packer_Builder_Test_${local.timestamp}"
+  password               = "${var.opc_password}"
+  persistent_volume_size = 15
+  shape                  = "oc3"
+  source_image_list      = "/oracle/public/OL_7.2_UEKR4_x86_64"
+  ssh_username           = "opc"
+  username               = "${var.opc_username}"
+}
+
+build {
+  sources = ["source.oracle-classic.persistent"]
+
+  provisioner "shell" {
+    inline = ["echo hello"]
+  }
+
+}
+
+```
+</Tab>
+<Tab heading="JSON">
 ```json
 {
   "variables": {
@@ -318,3 +455,6 @@ setting.
   ]
 }
 ```
+</Tab>
+</Tabs>
+

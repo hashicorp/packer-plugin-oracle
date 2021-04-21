@@ -1,4 +1,5 @@
-# The "legacy_isotime" function has been provided for backwards compatability, but we recommend switching to the timestamp and formatdate functions.
+# The "legacy_isotime" function has been provided for backwards compatability,
+# but we recommend switching to the timestamp and formatdate functions.
 
 locals {
   timestamp = "${legacy_isotime("20060102030405")}"
