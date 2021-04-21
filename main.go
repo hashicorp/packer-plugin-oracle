@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	classicbuilder "github.com/hashicorp/packer-plugin-oracle/builder/oracle/classic"
-	ocibuilder "github.com/hashicorp/packer-plugin-oracle/builder/oracle/oci"
+	classicbuilder "github.com/hashicorp/packer-plugin-oracle/builder/classic"
+	ocibuilder "github.com/hashicorp/packer-plugin-oracle/builder/oci"
 
 	"github.com/hashicorp/packer-plugin-sdk/plugin"
 	"github.com/hashicorp/packer-plugin-sdk/version"
