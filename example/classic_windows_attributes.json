@@ -1,0 +1,31 @@
+{
+  "variables": {
+    "opc_username": "{{ env `OPC_USERNAME`}}",
+    "opc_password": "{{ env `OPC_PASSWORD`}}",
+    "opc_identity_domain": "{{env `OPC_IDENTITY_DOMAIN`}}",
+    "opc_api_endpoint": "{{ env `OPC_ENDPOINT`}}"
+  },
+  "builders": [
+    {
+      "type": "oracle-classic",
+      "username": "{{ user `opc_username`}}",
+      "password": "{{ user `opc_password`}}",
+      "identity_domain": "{{ user `opc_identity_domain`}}",
+      "api_endpoint": "{{ user `opc_api_endpoint`}}",
+      "source_image_list": "/Compute-{{ user `opc_identity_domain` }}/{{ user `opc_username`}}/Microsoft_Windows_Server_2012_R2-17.3.6-20170930-124649",
+      "attributes_file": "./windows_attributes.json",
+      "shape": "oc3",
+      "image_name": "Packer_Windows_Demo_{{timestamp}}",
+      "dest_image_list": "Packer_Windows_Demo",
+      "communicator": "winrm",
+      "winrm_username": "Administrator",
+      "winrm_password": "password"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": "Write-Output(\"HELLO WORLD\")"
+    }
+  ]
+}

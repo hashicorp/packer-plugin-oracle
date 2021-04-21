@@ -1,0 +1,32 @@
+{
+	"variables": {
+		"timestamp": "{{isotime `20060102030405`}}"
+	},
+	"builders":[{
+	  "name": "base-image-example",
+	  "type": "oracle-oci",
+	  "availability_domain": "aaaa:PHX-AD-1",
+	  "base_image_ocid": "ocid1.image.oc1.iad.aaa",
+	  "compartment_ocid": "ocid1.compartment.oc1..aaa",
+	  "image_name": "my-image-{{ user `timestamp` }}",
+	  "shape": "VM.Standard.E2.1",
+	  "subnet_ocid": "ocid1.subnet.oc1.iad.aaa",
+	  "use_private_ip": "true",
+	  "instance_name": "packer-build-{{ user `timestamp` }}",
+	  "instance_tags": { "testing": "yes" },
+	  "instance_defined_tags": {
+	    "Operations": {
+	      "Team": "CostCenter",
+	      "Environment": "prod"
+	    }
+	  },
+	  "create_vnic_details": {
+	    "assign_public_ip": "false",
+	    "display_name": "testing-123",
+	    "nsg_ids": ["ocid1.networksecuritygroup.oc1.iad.aaa"]
+	  },
+	  "tags": {
+	    "CreationDate": "{{isotime `20060102 03:04:05 MST`}}"
+	  }
+	}]
+}

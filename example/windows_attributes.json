@@ -1,0 +1,6 @@
+{
+  "userdata": {
+    "administrator_password": "password",
+    "winrm": {}
+  }
+}

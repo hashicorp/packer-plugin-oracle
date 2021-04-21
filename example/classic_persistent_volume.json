@@ -1,0 +1,29 @@
+{
+  "variables": {
+    "opc_username": "{{ env `OPC_USERNAME`}}",
+    "opc_password": "{{ env `OPC_PASSWORD`}}",
+    "opc_identity_domain": "{{env `OPC_IDENTITY_DOMAIN`}}",
+    "opc_api_endpoint": "{{ env `OPC_ENDPOINT`}}"
+  },
+  "builders": [
+    {
+      "type": "oracle-classic",
+      "username": "{{ user `opc_username`}}",
+      "password": "{{ user `opc_password`}}",
+      "identity_domain": "{{ user `opc_identity_domain`}}",
+      "api_endpoint": "{{ user `opc_api_endpoint`}}",
+      "source_image_list": "/oracle/public/OL_7.2_UEKR4_x86_64",
+      "persistent_volume_size": 15,
+      "image_name": "Packer_Builder_Test_{{timestamp}}",
+      "dest_image_list": "Packer_Builder_Test_List",
+      "ssh_username": "opc",
+      "shape": "oc3"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["echo hello"]
+    }
+  ]
+}
