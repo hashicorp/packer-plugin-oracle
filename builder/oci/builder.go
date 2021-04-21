@@ -7,11 +7,11 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/hcl/v2/hcldec"
+	ocommon "github.com/hashicorp/packer-plugin-oracle/builder/common"
 	"github.com/hashicorp/packer-plugin-sdk/communicator"
 	"github.com/hashicorp/packer-plugin-sdk/multistep"
 	"github.com/hashicorp/packer-plugin-sdk/multistep/commonsteps"
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
-	ocommon "github.com/hashicorp/packer/builder/oracle/common"
 	"github.com/oracle/oci-go-sdk/v36/core"
 )
 
