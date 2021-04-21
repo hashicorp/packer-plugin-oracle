@@ -10,7 +10,8 @@
       "shape": "oc3",
       "image_name": "Packer_Builder_Test_{{timestamp}}",
       "attributes": "{\"userdata\": {\"pre-bootstrap\": {\"script\": [\"...\"]}}}",
-      "dest_image_list": "Packer_Builder_Test_List"
+      "dest_image_list": "Packer_Builder_Test_List",
+      "ssh_username": "opc"
     }
   ],
   "provisioners": [

@@ -5,6 +5,7 @@
 	"builders":[{
 	  "name": "base-image-example",
 	  "type": "oracle-oci",
+	  "ssh_username": "opc",
 	  "availability_domain": "aaaa:PHX-AD-1",
 	  "base_image_ocid": "ocid1.image.oc1.iad.aaa",
 	  "compartment_ocid": "ocid1.compartment.oc1..aaa",

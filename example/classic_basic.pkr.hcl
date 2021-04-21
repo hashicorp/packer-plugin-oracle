@@ -11,6 +11,7 @@ source "oracle-classic" "basic" {
   shape             = "oc3"
   source_image_list = "/oracle/public/OL_7.2_UEKR4_x86_64"
   username          = "myuser@myaccount.com"
+  ssh_username      = "opc"
 }
 
 build {

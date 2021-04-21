@@ -3,6 +3,7 @@
     {
       "name": "base-image-filtered",
       "type": "oracle-oci",
+      "ssh_username": "opc",
       "availability_domain": "aaaa:PHX-AD-1",
       "base_image_filter": {
         "operating_system": "Oracle Linux",

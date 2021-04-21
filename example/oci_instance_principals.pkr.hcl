@@ -7,6 +7,7 @@ source "oracle-oci" "example" {
   ssh_username            = "opc"
   subnet_ocid             = "ocid1.subnet.oc1..aaa"
   use_instance_principals = "true"
+  ssh_username            = "opc"
 }
 
 build {
