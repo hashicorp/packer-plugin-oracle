@@ -3,6 +3,7 @@ description: |
   The oracle-classic builder is able to create new custom images for use with
   Oracle Cloud Infrastructure Classic Compute.
 page_title: Oracle Cloud Infrastructure Classic - Builders
+nav_title: Classic
 ---
 
 # Oracle Cloud Infrastructure Classic Compute Builder
@@ -198,6 +199,7 @@ obfuscated; you will need to add a working `username`, `password`,
 
 <Tabs>
 <Tab heading="HCL2">
+
 ```hcl
 locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
 
@@ -222,8 +224,10 @@ build {
 
 }
 ```
+
 </Tab>
 <Tab heading="JSON">
+
 ```json
 {
   "builders": [
@@ -248,6 +252,7 @@ build {
   ]
 }
 ```
+
 </Tab>
 </Tabs>
 
@@ -281,6 +286,7 @@ attributes file:
 
 <Tabs>
 <Tab heading="HCL2">
+
 ```hcl
 
 variable "opc_api_endpoint" {
@@ -330,8 +336,10 @@ build {
 }
 
 ```
+
 </Tab>
 <Tab heading="JSON">
+
 ```json
 {
   "variables": {
@@ -365,6 +373,7 @@ build {
   ]
 }
 ```
+
 </Tab>
 </Tabs>
 
@@ -375,6 +384,7 @@ setting.
 
 <Tabs>
 <Tab heading="HCL2">
+
 ```hcl
 
 variable "opc_api_endpoint" {
@@ -422,8 +432,10 @@ build {
 }
 
 ```
+
 </Tab>
 <Tab heading="JSON">
+
 ```json
 {
   "variables": {
@@ -455,6 +467,7 @@ build {
   ]
 }
 ```
+
 </Tab>
 </Tabs>
 

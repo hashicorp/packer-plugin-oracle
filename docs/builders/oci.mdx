@@ -3,6 +3,7 @@ description: |
   The oracle-oci builder is able to create new custom images for use with Oracle
   Cloud Infrastructure (OCI).
 page_title: Oracle OCI - Builders
+nav_title: OCI
 ---
 
 # Oracle Cloud Infrastructure (OCI) Builder
@@ -262,8 +263,10 @@ build {
 }
 
 ```
+
 </Tab>
 <Tab heading="JSON">
+
 ```json
 {
   "availability_domain": "aaaa:PHX-AD-1",
@@ -276,6 +279,7 @@ build {
   "type": "oracle-oci"
 }
 ```
+
 </Tab>
 </Tabs>
 
@@ -365,6 +369,7 @@ are listed in `nsg_ids` under `create_vnic_details`.
 
 <Tabs>
 <Tab heading="HCL2">
+
 ```hcl
 # The "legacy_isotime" function has been provided for backwards compatability,
 # but we recommend switching to the timestamp and formatdate functions.
@@ -409,6 +414,7 @@ build {
 
 </Tab>
 <Tab heading="JSON">
+
 ```json
 {
   "variables": {
@@ -443,6 +449,7 @@ build {
   }]
 }
 ```
+
 </Tab>
 </Tabs>
 
