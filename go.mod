@@ -7,8 +7,8 @@ require (
 	github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-oracle-terraform v0.17.0
-	github.com/hashicorp/hcl/v2 v2.9.1
-	github.com/hashicorp/packer-plugin-sdk v0.2.0
+	github.com/hashicorp/hcl/v2 v2.10.0
+	github.com/hashicorp/packer-plugin-sdk v0.2.1
 	github.com/oracle/oci-go-sdk/v36 v36.2.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/stretchr/objx v0.3.0 // indirect
