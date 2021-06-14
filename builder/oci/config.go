@@ -4,6 +4,7 @@ package oci
 
 import (
 	"encoding/base64"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -25,8 +26,13 @@ import (
 
 type CreateVNICDetails struct {
 	// fields that can be specified under "create_vnic_details"
-	AssignPublicIp      *bool                             `mapstructure:"assign_public_ip" required:"false"`
-	DefinedTags         map[string]map[string]interface{} `mapstructure:"defined_tags" required:"false"`
+	AssignPublicIp *bool `mapstructure:"assign_public_ip" required:"false"`
+	// HCL cannot be decoded into an interface so for HCL templates you must use the DefinedTagsJson option,
+	// To be used with https://www.packer.io/docs/templates/hcl_templates/functions/encoding/jsonencode
+	// ref: https://github.com/hashicorp/hcl/issues/291#issuecomment-496347585
+	DefinedTagsJson string `mapstructure:"defined_tags_json" required:"false"`
+	// For JSON templates we keep the map[string]map[string]interface{}
+	DefinedTags         map[string]map[string]interface{} `mapstructure:"defined_tags" mapstructure-to-hcl2:",skip" required:"false"`
 	DisplayName         *string                           `mapstructure:"display_name" required:"false"`
 	FreeformTags        map[string]string                 `mapstructure:"tags" required:"false"`
 	HostnameLabel       *string                           `mapstructure:"hostname_label" required:"false"`
@@ -92,12 +98,16 @@ type Config struct {
 	LaunchMode         string            `mapstructure:"image_launch_mode"`
 
 	// Instance
-	InstanceName        *string                           `mapstructure:"instance_name"`
-	InstanceTags        map[string]string                 `mapstructure:"instance_tags"`
-	InstanceDefinedTags map[string]map[string]interface{} `mapstructure:"instance_defined_tags"`
-	Shape               string                            `mapstructure:"shape"`
-	ShapeConfig         FlexShapeConfig                   `mapstructure:"shape_config"`
-	BootVolumeSizeInGBs int64                             `mapstructure:"disk_size"`
+	InstanceName *string           `mapstructure:"instance_name"`
+	InstanceTags map[string]string `mapstructure:"instance_tags"`
+	// HCL cannot be decoded into an interface so for HCL templates you must use the InstanceDefinedTagsJson option,
+	// To be used with https://www.packer.io/docs/templates/hcl_templates/functions/encoding/jsonencode
+	// ref: https://github.com/hashicorp/hcl/issues/291#issuecomment-496347585
+	InstanceDefinedTagsJson string                            `mapstructure:"instance_defined_tags_json" required:"false"`
+	InstanceDefinedTags     map[string]map[string]interface{} `mapstructure:"instance_defined_tags" mapstructure-to-hcl2:",skip"`
+	Shape                   string                            `mapstructure:"shape"`
+	ShapeConfig             FlexShapeConfig                   `mapstructure:"shape_config"`
+	BootVolumeSizeInGBs     int64                             `mapstructure:"disk_size"`
 
 	// Metadata optionally contains custom metadata key/value pairs provided in the
 	// configuration. While this can be used to set metadata["user_data"] the explicit
@@ -115,8 +125,13 @@ type Config struct {
 	CreateVnicDetails CreateVNICDetails `mapstructure:"create_vnic_details"`
 
 	// Tagging
-	Tags        map[string]string                 `mapstructure:"tags"`
-	DefinedTags map[string]map[string]interface{} `mapstructure:"defined_tags"`
+	Tags map[string]string `mapstructure:"tags"`
+	// HCL cannot be decoded into an interface so for HCL templates you must use the DefinedTagsJson option,
+	// To be used with https://www.packer.io/docs/templates/hcl_templates/functions/encoding/jsonencode
+	// ref: https://github.com/hashicorp/hcl/issues/291#issuecomment-496347585
+	DefinedTagsJson string `mapstructure:"defined_tags_json" required:"false"`
+	// For JSON templates we keep the map[string]map[string]interface{}
+	DefinedTags map[string]map[string]interface{} `mapstructure:"defined_tags" required:"false" mapstructure-to-hcl2:",skip"`
 
 	ctx interpolate.Context
 }
@@ -140,6 +155,25 @@ func (c *Config) Prepare(raws ...interface{}) error {
 	if es := c.Comm.Prepare(&c.ctx); len(es) > 0 {
 		errs = packersdk.MultiErrorAppend(errs, es...)
 	}
+
+	if c.InstanceDefinedTagsJson != "" {
+		if err := json.Unmarshal([]byte(c.InstanceDefinedTagsJson), &c.InstanceDefinedTags); err != nil {
+			return fmt.Errorf("Failed to unmarshal 'instance_defined_tags_json': %s", err.Error())
+		}
+	}
+
+	if c.DefinedTagsJson != "" {
+		if err := json.Unmarshal([]byte(c.DefinedTagsJson), &c.DefinedTags); err != nil {
+			return fmt.Errorf("Failed to unmarshal 'defined_tags': %s", err.Error())
+		}
+	}
+
+	if c.CreateVnicDetails.DefinedTagsJson != "" {
+		if err := json.Unmarshal([]byte(c.CreateVnicDetails.DefinedTagsJson), &c.CreateVnicDetails.DefinedTags); err != nil {
+			return fmt.Errorf("Failed to unmarshal 'defined_tags': %s", err.Error())
+		}
+	}
+
 
 	var tenancyOCID string
 

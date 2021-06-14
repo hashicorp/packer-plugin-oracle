@@ -309,6 +309,72 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
+	t.Run("instance_defined_tags_json", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+		raw["instance_defined_tags_json"] = `{ "fo": { "o" : "bar" } }`
+		delete(raw, "instance_defined_tags")
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		fo, ok := c.InstanceDefinedTags["fo"]
+		if !ok {
+			t.Fatalf("unexpected InstanceDefinedTags")
+		}
+		bar, ok := fo["o"]
+		if !ok || bar != "bar" {
+			t.Fatalf("unexpected InstanceDefinedTags")
+		}
+	})
+
+	t.Run("defined_tags_json", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+		raw["defined_tags_json"] = `{ "fo": { "o" : "bar" } }`
+		delete(raw, "defined_tags")
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		fo, ok := c.DefinedTags["fo"]
+		if !ok {
+			t.Fatalf("unexpected DefinedTags")
+		}
+		bar, ok := fo["o"]
+		if !ok || bar != "bar" {
+			t.Fatalf("unexpected DefinedTags")
+		}
+	})
+
+	t.Run("create_vnic_details.defined_tags_json", func(t *testing.T) {
+		createVNICDetails := map[string]interface{}{
+			"defined_tags_json": `{ "fo": { "o" : "bar" } }`,
+		}
+		raw := testConfig(cfgFile)
+		raw["create_vnic_details"] = createVNICDetails
+		delete(raw, "defined_tags")
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		fo, ok := c.CreateVnicDetails.DefinedTags["fo"]
+		if !ok {
+			t.Fatalf("unexpected DefinedTags")
+		}
+		bar, ok := fo["o"]
+		if !ok || bar != "bar" {
+			t.Fatalf("unexpected DefinedTags")
+		}
+	})
+
 	// Test the correct errors are produced when certain template keys
 	// are present alongside use_instance_principals key.
 	invalidKeys := []string{
