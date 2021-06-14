@@ -166,14 +166,29 @@ can also be supplied to override the typical auto-generated key:
 - `instance_tags` (map of strings) - Add one or more freeform tags to the instance used for the
   image creation process.
 
+- `instance_defined_tags_json` (string) - Json string to add one or more defined tags for a given namespace
+   to the instance used for the image creation process. Only works on HCL2 templates. For old-style JSON templates,
+   use [instance_defined_tags](#instance_defined_tags) instead.
+
+  ```hcl
+  instance_defined_tags_json = jsonencode({
+    "Operations" = {
+      "Environment" = "prod"
+      "Team"        = "CostCenter"
+    }
+  })
+  ```
+
 - `instance_defined_tags` (map of maps of strings) - Add one or more defined tags for a given namespace
-  to the instance used for the image creation process.
+  to the instance used for the image creation process. Only works on old-style JSON templates. For HCL2 templates,
+  use [instance_defined_tags_json](#instance_defined_tags_json) instead.
 
 - `create_vnic_details` (map of strings) - Specify details for the virtual network interface card (VNIC)
   that is attached to the instance. Possible keys (all optional) are: `assign_public_ip` (bool),
   `display_name` (string), `hostname_lable` (string), `nsg_ids` (list), `private_ip` (string),
-  `skip_source_dest_check` (bool), `subnet_id` (string), `tags` (map of string), and `defined_tags`
-  (map of maps of strings). See
+  `skip_source_dest_check` (bool), `subnet_id` (string), `tags` (map of string). Besides the previous keys, the `defined_tags`
+  (map of maps of strings) is also available on old-style JSON templates, while `defined_tags_json` (string) is the json
+  string equivalent variant for HCL2 templates. See
   [the Oracle docs](https://docs.cloud.oracle.com/en-us/iaas/Content/Network/Tasks/managingVNICs.htm)
   for more information about VNICs.
 
@@ -228,8 +243,23 @@ the launched instance.
   'tag2': 'value2'
 ```
 
+- `defined_tags_json` (string) - JSON string to add one or more defined tags for a given namespace to the resulting
+  custom image. Only works on HCL2 templates. For old-style JSON templates, use [defined_tags](#defined_tags) instead.
+
+  ```hcl
+  defined_tags_json = jsonencode({
+    "tag1" = {
+      "tag1.2" = "value1"
+    }
+    "tag2" = "value2"
+  })
+  ```
+
+  See [the Oracle docs](https://docs.cloud.oracle.com/iaas/Content/Identity/Concepts/taggingoverview.htm) for more details.
+
 - `defined_tags` (map of map of strings) - Add one or more defined tags for a given namespace to the resulting
-  custom image. See [the Oracle
+  custom image. Only works on old-style JSON templates. For HCL2 templates,
+use [defined_tags_json](#defined_tags_json) instead. See [the Oracle
   docs](https://docs.cloud.oracle.com/iaas/Content/Identity/Concepts/taggingoverview.htm)
   for more details. Example:
 
@@ -371,11 +401,8 @@ are listed in `nsg_ids` under `create_vnic_details`.
 <Tab heading="HCL2">
 
 ```hcl
-# The "legacy_isotime" function has been provided for backwards compatability,
-# but we recommend switching to the timestamp and formatdate functions.
-
 locals {
-  timestamp = "${legacy_isotime("20060102030405")}"
+  timestamp = "${formatdate("YYYYMMDDhhmmss", timestamp())}"
 }
 
 source "oracle-oci" "base-image-example" {
@@ -388,12 +415,12 @@ source "oracle-oci" "base-image-example" {
     nsg_ids          = ["ocid1.networksecuritygroup.oc1.iad.aaa"]
   }
   image_name = "my-image-${local.timestamp}"
-  instance_defined_tags {
-    Operations = {
-      Environment = "prod"
-      Team        = "CostCenter"
+  instance_defined_tags_json = jsonencode({
+    "Operations" = {
+      "Environment" = "prod"
+      "Team"        = "CostCenter"
     }
-  }
+  })
   instance_name = "packer-build-${local.timestamp}"
   instance_tags = {
     testing = "yes"
@@ -408,7 +435,6 @@ source "oracle-oci" "base-image-example" {
 
 build {
   sources = ["source.oracle-oci.base-image-example"]
-
 }
 ```
 
