@@ -309,6 +309,72 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
+	t.Run("instance_defined_tags_json", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+		raw["instance_defined_tags_json"] = `{ "fo": { "o" : "bar" } }`
+		delete(raw, "instance_defined_tags")
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		fo, ok := c.InstanceDefinedTags["fo"]
+		if !ok {
+			t.Fatalf("unexpected InstanceDefinedTags")
+		}
+		bar, ok := fo["o"]
+		if !ok || bar != "bar" {
+			t.Fatalf("unexpected InstanceDefinedTags")
+		}
+	})
+
+	t.Run("defined_tags_json", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+		raw["defined_tags_json"] = `{ "fo": { "o" : "bar" } }`
+		delete(raw, "defined_tags")
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		fo, ok := c.DefinedTags["fo"]
+		if !ok {
+			t.Fatalf("unexpected DefinedTags")
+		}
+		bar, ok := fo["o"]
+		if !ok || bar != "bar" {
+			t.Fatalf("unexpected DefinedTags")
+		}
+	})
+
+	t.Run("create_vnic_details.defined_tags_json", func(t *testing.T) {
+		createVNICDetails := map[string]interface{}{
+			"defined_tags_json": `{ "fo": { "o" : "bar" } }`,
+		}
+		raw := testConfig(cfgFile)
+		raw["create_vnic_details"] = createVNICDetails
+		delete(raw, "defined_tags")
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		fo, ok := c.CreateVnicDetails.DefinedTags["fo"]
+		if !ok {
+			t.Fatalf("unexpected DefinedTags")
+		}
+		bar, ok := fo["o"]
+		if !ok || bar != "bar" {
+			t.Fatalf("unexpected DefinedTags")
+		}
+	})
+
 	// Test the correct errors are produced when certain template keys
 	// are present alongside use_instance_principals key.
 	invalidKeys := []string{
@@ -351,11 +417,11 @@ func baseTestConfigWithTmpKeyFile() (*ini.File, *os.File, error) {
 	// Build ini
 	cfg := ini.Empty()
 	section, _ := cfg.NewSection("DEFAULT")
-	section.NewKey("region", "us-ashburn-1")
-	section.NewKey("tenancy", "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-	section.NewKey("user", "ocid1.user.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-	section.NewKey("fingerprint", "70:04:5z:b3:19:ab:90:75:a4:1f:50:d4:c7:c3:33:20")
-	section.NewKey("key_file", keyFile.Name())
+	_, _ = section.NewKey("region", "us-ashburn-1")
+	_, _ = section.NewKey("tenancy", "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+	_, _ = section.NewKey("user", "ocid1.user.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+	_, _ = section.NewKey("fingerprint", "70:04:5z:b3:19:ab:90:75:a4:1f:50:d4:c7:c3:33:20")
+	_, _ = section.NewKey("key_file", keyFile.Name())
 
 	return cfg, keyFile, nil
 }

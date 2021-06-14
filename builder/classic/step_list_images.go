@@ -99,5 +99,4 @@ func (s *stepListImages) Run(ctx context.Context, state multistep.StateBag) mult
 
 func (s *stepListImages) Cleanup(state multistep.StateBag) {
 	// Nothing to do
-	return
 }

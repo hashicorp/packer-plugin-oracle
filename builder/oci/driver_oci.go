@@ -21,7 +21,6 @@ type driverOCI struct {
 	computeClient core.ComputeClient
 	vcnClient     core.VirtualNetworkClient
 	cfg           *Config
-	context       context.Context
 }
 
 var retryPolicy = &common.RetryPolicy{

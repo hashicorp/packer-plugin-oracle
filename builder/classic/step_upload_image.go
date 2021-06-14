@@ -62,7 +62,7 @@ func (s *stepUploadImage) Run(ctx context.Context, state multistep.StateBag) mul
 	%s`, uploadImageCmd)
 
 	dest := "/tmp/create-packer-diskimage.sh"
-	comm.Upload(dest, strings.NewReader(command), nil)
+	_ = comm.Upload(dest, strings.NewReader(command), nil)
 	cmd := &packersdk.RemoteCmd{
 		Command: fmt.Sprintf("sudo /bin/sh %s", dest),
 	}
