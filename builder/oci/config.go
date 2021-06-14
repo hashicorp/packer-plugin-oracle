@@ -174,7 +174,6 @@ func (c *Config) Prepare(raws ...interface{}) error {
 		}
 	}
 
-
 	var tenancyOCID string
 
 	if c.InstancePrincipals {

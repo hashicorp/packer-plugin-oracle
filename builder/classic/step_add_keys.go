@@ -71,5 +71,4 @@ func (s *stepAddKeysToAPI) Cleanup(state multistep.StateBag) {
 	if err != nil {
 		ui.Error(fmt.Sprintf("Error deleting SSH keys: %s", err.Error()))
 	}
-	return
 }

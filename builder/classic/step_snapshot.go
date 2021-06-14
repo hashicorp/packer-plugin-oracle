@@ -9,9 +9,7 @@ import (
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 )
 
-type stepSnapshot struct {
-	cleanupSnap bool
-}
+type stepSnapshot struct{}
 
 func (s *stepSnapshot) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	// get variables from state
@@ -68,5 +66,4 @@ func (s *stepSnapshot) Cleanup(state multistep.StateBag) {
 		ui.Error(err.Error())
 		state.Put("error", err)
 	}
-	return
 }

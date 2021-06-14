@@ -19,6 +19,7 @@ import (
 const BuilderId = "packer.oracle.oci"
 
 // OCI API version
+// nolint
 const ociAPIVersion = "20160918"
 
 // Builder is a builder implementation that creates Oracle OCI custom images.
