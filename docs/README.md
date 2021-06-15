@@ -52,10 +52,9 @@ on [installing a plugin](https://www.packer.io/docs/extending/plugins/#installin
 
 ### Builders
 
-- [oracle-classic](/docs/builders/oracle-classic.mdx) - Create custom images in Oracle Cloud Infrastructure
+- [oracle-classic](./builders/classic.mdx) - Create custom images in Oracle Cloud Infrastructure
     Classic Compute by launching a source instance and creating an image list
     from a snapshot of it after provisioning.
 
-- [oracle-oci](/docs/builders/oracle-classic.mdx) - Create custom images in Oracle Cloud Infrastructure (OCI) by
+- [oracle-oci](./builders/oci.mdx) - Create custom images in Oracle Cloud Infrastructure (OCI) by
     launching a base instance and creating an image from it after provisioning.
-
