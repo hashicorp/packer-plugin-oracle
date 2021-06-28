@@ -1,4 +1,11 @@
+# CHANGELOG
+
+## 1.1.0 (TBD)
+
+* Added support for [token-based authentication](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm)
+
 ## 1.0.0 (June 14, 2021)
+
 The code base for this plugin has been stable since the Packer core split.
 We are marking this plugin as v1.0.0 to indicate that it is stable and ready for consumption via `packer init`.
 

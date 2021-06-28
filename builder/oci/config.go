@@ -87,8 +87,9 @@ type Config struct {
 	PassPhrase   string `mapstructure:"pass_phrase"`
 	UsePrivateIP bool   `mapstructure:"use_private_ip"`
 
-	AvailabilityDomain string `mapstructure:"availability_domain"`
-	CompartmentID      string `mapstructure:"compartment_ocid"`
+	SecurityTokenFilePath string `mapstructure:"security_token_file"`
+	AvailabilityDomain    string `mapstructure:"availability_domain"`
+	CompartmentID         string `mapstructure:"compartment_ocid"`
 
 	// Image
 	BaseImageID        string            `mapstructure:"base_image_ocid"`
@@ -274,11 +275,6 @@ func (c *Config) Prepare(raws ...interface{}) error {
 			return err
 		}
 
-		if userOCID, _ := configProvider.UserOCID(); userOCID == "" {
-			errs = packersdk.MultiErrorAppend(
-				errs, errors.New("'user_ocid' must be specified"))
-		}
-
 		tenancyOCID, _ = configProvider.TenancyOCID()
 		if tenancyOCID == "" {
 			errs = packersdk.MultiErrorAppend(
@@ -290,6 +286,16 @@ func (c *Config) Prepare(raws ...interface{}) error {
 				errs, errors.New("'fingerprint' must be specified"))
 		}
 
+		if _, err := configProvider.UserOCID(); err != nil {
+			errs = packersdk.MultiErrorAppend(
+				errs, fmt.Errorf("'user_ocid' must be correctly specified. %w", err))
+		}
+
+		if _, err := configProvider.KeyID(); err != nil {
+			errs = packersdk.MultiErrorAppend(
+				errs, fmt.Errorf("'security_token_file' must be correctly specified. %w", err))
+		}
+
 		if _, err := configProvider.PrivateRSAKey(); err != nil {
 			errs = packersdk.MultiErrorAppend(
 				errs, fmt.Errorf("'key_file' must be correctly specified. %w", err))
@@ -297,6 +303,7 @@ func (c *Config) Prepare(raws ...interface{}) error {
 
 		c.configProvider = configProvider
 	}
+
 
 	if c.AvailabilityDomain == "" {
 		errs = packersdk.MultiErrorAppend(
