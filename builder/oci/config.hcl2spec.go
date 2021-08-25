@@ -77,6 +77,7 @@ type FlatConfig struct {
 	KeyFile                   *string                `mapstructure:"key_file" cty:"key_file" hcl:"key_file"`
 	PassPhrase                *string                `mapstructure:"pass_phrase" cty:"pass_phrase" hcl:"pass_phrase"`
 	UsePrivateIP              *bool                  `mapstructure:"use_private_ip" cty:"use_private_ip" hcl:"use_private_ip"`
+	SecurityTokenFilePath     *string                `mapstructure:"security_token_file" cty:"security_token_file" hcl:"security_token_file"`
 	AvailabilityDomain        *string                `mapstructure:"availability_domain" cty:"availability_domain" hcl:"availability_domain"`
 	CompartmentID             *string                `mapstructure:"compartment_ocid" cty:"compartment_ocid" hcl:"compartment_ocid"`
 	BaseImageID               *string                `mapstructure:"base_image_ocid" cty:"base_image_ocid" hcl:"base_image_ocid"`
@@ -178,6 +179,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"key_file":                     &hcldec.AttrSpec{Name: "key_file", Type: cty.String, Required: false},
 		"pass_phrase":                  &hcldec.AttrSpec{Name: "pass_phrase", Type: cty.String, Required: false},
 		"use_private_ip":               &hcldec.AttrSpec{Name: "use_private_ip", Type: cty.Bool, Required: false},
+		"security_token_file":          &hcldec.AttrSpec{Name: "security_token_file", Type: cty.String, Required: false},
 		"availability_domain":          &hcldec.AttrSpec{Name: "availability_domain", Type: cty.String, Required: false},
 		"compartment_ocid":             &hcldec.AttrSpec{Name: "compartment_ocid", Type: cty.String, Required: false},
 		"base_image_ocid":              &hcldec.AttrSpec{Name: "base_image_ocid", Type: cty.String, Required: false},
