@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.1.0 (TBD)
+## 1.0.1 (August 25, 2021)
 
 * Added support for [token-based authentication](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm)
 
