@@ -304,7 +304,6 @@ func (c *Config) Prepare(raws ...interface{}) error {
 		c.configProvider = configProvider
 	}
 
-
 	if c.AvailabilityDomain == "" {
 		errs = packersdk.MultiErrorAppend(
 			errs, errors.New("'availability_domain' must be specified"))
