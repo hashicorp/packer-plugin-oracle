@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 1.0.2 (Unreleased)
+
+* New option: `skip_create_image` which is useful during a build test stage [GH-38]
+* Add the image OCID to the default output [GH-35]
+
 ## 1.0.1 (August 25, 2021)
 
 * Added support for [token-based authentication](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm)

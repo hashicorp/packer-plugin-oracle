@@ -208,6 +208,8 @@ or configured for the default OCI CLI authenticaton profile.
 
   ### Additional configuration parameters
 
+- `skip_create_image` (bool) - Skip creating the image. Useful for setting to `true` during a build test stage. Defaults to `false`.
+
 - `image_name` (string) - The name to assign to the resulting custom image.
 
 - `image_compartment_ocid` (string) - The OCID of the target compartment for the resulting image. Defaults to `compartment_ocid`.

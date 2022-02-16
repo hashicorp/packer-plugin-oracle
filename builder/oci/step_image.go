@@ -8,7 +8,9 @@ import (
 	packersdk "github.com/hashicorp/packer-plugin-sdk/packer"
 )
 
-type stepImage struct{}
+type stepImage struct {
+	SkipCreateImage bool
+}
 
 func (s *stepImage) Run(ctx context.Context, state multistep.StateBag) multistep.StepAction {
 	var (
@@ -16,6 +18,11 @@ func (s *stepImage) Run(ctx context.Context, state multistep.StateBag) multistep
 		ui         = state.Get("ui").(packersdk.Ui)
 		instanceID = state.Get("instance_id").(string)
 	)
+
+	if s.SkipCreateImage {
+		ui.Say("Skipping image creation...")
+		return multistep.ActionContinue
+	}
 
 	ui.Say("Creating image from instance...")
 
@@ -39,7 +46,7 @@ func (s *stepImage) Run(ctx context.Context, state multistep.StateBag) multistep
 	// AVAILABLE at this point. Does it matter?
 	state.Put("image", image)
 
-	ui.Say("Image created.")
+	ui.Say(fmt.Sprintf("Created image (%s).", *image.Id))
 
 	return multistep.ActionContinue
 }

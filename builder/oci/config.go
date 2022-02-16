@@ -75,6 +75,10 @@ type Config struct {
 	// - PassPhrase
 	InstancePrincipals bool `mapstructure:"use_instance_principals"`
 
+	// If true, Packer will not create the image. Useful for setting to `true`
+	// during a build test stage. Default `false`.
+	SkipCreateImage bool `mapstructure:"skip_create_image" required:"false"`
+
 	AccessCfgFile        string `mapstructure:"access_cfg_file"`
 	AccessCfgFileAccount string `mapstructure:"access_cfg_file_account"`
 

@@ -75,7 +75,9 @@ func (b *Builder) Run(ctx context.Context, ui packersdk.Ui, hook packersdk.Hook)
 		&commonsteps.StepCleanupTempKeys{
 			Comm: &b.config.Comm,
 		},
-		&stepImage{},
+		&stepImage{
+			SkipCreateImage: b.config.SkipCreateImage,
+		},
 	}
 
 	// Run the steps
