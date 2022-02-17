@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.0.2 (Unreleased)
+
+* Fix: Persist generated private key to `StepKeyPair` communicator config.
+
 ## 1.0.1 (August 25, 2021)
 
 * Added support for [token-based authentication](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm)
