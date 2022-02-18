@@ -75,6 +75,7 @@ func (s *StepKeyPair) Run(ctx context.Context, state multistep.StateBag) multist
 	}
 
 	s.Comm.SSHPublicKey = ssh.MarshalAuthorizedKey(pub)
+	s.Comm.SSHPrivateKey = pem.EncodeToMemory(&privBlk)
 
 	// If we're in debug mode, output the private key to the working
 	// directory.
