@@ -1,8 +1,9 @@
 # CHANGELOG
 
 ## 1.0.2 (Unreleased)
-
-* Fix: Persist generated private key to `StepKeyPair` communicator config.
+* New option: `skip_create_image` which is useful during a build test stage [GH-38]
+* Add the image OCID to the default output [GH-35]
+* Fix: Persist generated private key to `StepKeyPair` communicator config. [GH-43]
 
 ## 1.0.1 (August 25, 2021)
 
