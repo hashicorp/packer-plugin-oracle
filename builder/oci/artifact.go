@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/oracle/oci-go-sdk/v36/core"
+	"github.com/oracle/oci-go-sdk/v65/core"
 )
 
 // Artifact is an artifact implementation that contains a built Custom Image.

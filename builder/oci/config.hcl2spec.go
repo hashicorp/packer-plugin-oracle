@@ -86,6 +86,7 @@ type FlatConfig struct {
 	ImageName                 *string                `mapstructure:"image_name" cty:"image_name" hcl:"image_name"`
 	ImageCompartmentID        *string                `mapstructure:"image_compartment_ocid" cty:"image_compartment_ocid" hcl:"image_compartment_ocid"`
 	LaunchMode                *string                `mapstructure:"image_launch_mode" cty:"image_launch_mode" hcl:"image_launch_mode"`
+	NicAttachmentType         *string                `mapstructure:"nic_attachment_type" cty:"nic_attachment_type" hcl:"nic_attachment_type"`
 	InstanceName              *string                `mapstructure:"instance_name" cty:"instance_name" hcl:"instance_name"`
 	InstanceTags              map[string]string      `mapstructure:"instance_tags" cty:"instance_tags" hcl:"instance_tags"`
 	InstanceDefinedTagsJson   *string                `mapstructure:"instance_defined_tags_json" required:"false" cty:"instance_defined_tags_json" hcl:"instance_defined_tags_json"`

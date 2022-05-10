@@ -20,8 +20,8 @@ import (
 	"github.com/hashicorp/packer-plugin-sdk/pathing"
 	"github.com/hashicorp/packer-plugin-sdk/template/config"
 	"github.com/hashicorp/packer-plugin-sdk/template/interpolate"
-	ocicommon "github.com/oracle/oci-go-sdk/v36/common"
-	ociauth "github.com/oracle/oci-go-sdk/v36/common/auth"
+	ocicommon "github.com/oracle/oci-go-sdk/v65/common"
+	ociauth "github.com/oracle/oci-go-sdk/v65/common/auth"
 )
 
 type CreateVNICDetails struct {
@@ -101,6 +101,7 @@ type Config struct {
 	ImageName          string            `mapstructure:"image_name"`
 	ImageCompartmentID string            `mapstructure:"image_compartment_ocid"`
 	LaunchMode         string            `mapstructure:"image_launch_mode"`
+	NicAttachmentType  string            `mapstructure:"nic_attachment_type"`
 
 	// Instance
 	InstanceName *string           `mapstructure:"instance_name"`

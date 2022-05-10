@@ -11,8 +11,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/oracle/oci-go-sdk/v36/common"
-	core "github.com/oracle/oci-go-sdk/v36/core"
+	"github.com/oracle/oci-go-sdk/v65/common"
+	core "github.com/oracle/oci-go-sdk/v65/core"
 )
 
 // driverOCI implements the Driver interface and communicates with Oracle
@@ -196,6 +196,40 @@ func (d *driverOCI) CreateImage(ctx context.Context, id string) (core.Image, err
 	}
 
 	return res.Image, nil
+}
+
+// UpdateImageCapabilitySchema creates a new custom image.
+func (d *driverOCI) UpdateImageCapabilitySchema(ctx context.Context, imageId string) (core.UpdateComputeImageCapabilitySchemaResponse, error) {
+
+	// get the schema associated with the newly created image
+	schema, err := d.computeClient.ListComputeImageCapabilitySchemas(context.Background(), core.ListComputeImageCapabilitySchemasRequest{
+		ImageId: &imageId,
+	})
+	if err != nil {
+		return core.UpdateComputeImageCapabilitySchemaResponse{}, err
+	}
+
+	// update the schema to add the new custom fields
+	if len(d.cfg.LaunchMode) > 1 {
+		schema.Items[0].SchemaData["Compute.LaunchMode"] = core.EnumStringImageCapabilitySchemaDescriptor{Values: []string{"NATIVE", "EMULATED", "PARAVIRTUALIZED", "CUSTOM"}, DefaultValue: &d.cfg.LaunchMode, Source: "IMAGE"}
+	}
+	if len(d.cfg.LaunchMode) > 1 {
+		schema.Items[0].SchemaData["Network.AttachmentType"] = core.EnumStringImageCapabilitySchemaDescriptor{Values: []string{"E1000", "VFIO", "PARAVIRTUALIZED"}, DefaultValue: &d.cfg.NicAttachmentType, Source: "IMAGE"}
+	}
+
+	// update the new fields to the schema definition
+	resp, err := d.computeClient.UpdateComputeImageCapabilitySchema(ctx,
+		core.UpdateComputeImageCapabilitySchemaRequest{ComputeImageCapabilitySchemaId: schema.Items[0].Id,
+			UpdateComputeImageCapabilitySchemaDetails: core.UpdateComputeImageCapabilitySchemaDetails{SchemaData: schema.Items[0].SchemaData,
+				FreeformTags: d.cfg.Tags,
+				DefinedTags:  d.cfg.DefinedTags,
+			}})
+
+	if err != nil {
+		return resp, err
+	}
+
+	return resp, nil
 }
 
 // DeleteImage deletes a custom image.
