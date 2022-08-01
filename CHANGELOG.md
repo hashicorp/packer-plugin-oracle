@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 1.0.3 (Unreleased)
+## Unreleased
 * Support NetworkAttachmentType and LaunchMode default updates to the ImageCapabilitySchema [GH-46]
  
 ## 1.0.2 (Unreleased)
