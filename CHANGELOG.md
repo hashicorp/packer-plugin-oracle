@@ -1,6 +1,6 @@
-# CHANGELOG
+See [Releases](https://github.com/hashicorp/packer-plugin-oracle/releases) for latest CHANGELOG information.
 
-## 1.0.2 (Unreleased)
+## 1.0.2 (May 25, 2022)
 * New option: `skip_create_image` which is useful during a build test stage [GH-38]
 * Add the image OCID to the default output [GH-35]
 * Fix: Persist generated private key to `StepKeyPair` communicator config. [GH-43]
