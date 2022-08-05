@@ -210,7 +210,7 @@ func (d *driverOCI) UpdateImageCapabilitySchema(ctx context.Context, imageId str
 	}
 
 	// update the schema to add the new custom fields
-	if len(d.cfg.LaunchMode) > 1 {
+	if d.cfg.LaunchMode != "" {
 		schema.Items[0].SchemaData["Compute.LaunchMode"] = core.EnumStringImageCapabilitySchemaDescriptor{Values: []string{"NATIVE", "EMULATED", "PARAVIRTUALIZED", "CUSTOM"}, DefaultValue: &d.cfg.LaunchMode, Source: "IMAGE"}
 	}
 	if len(d.cfg.LaunchMode) > 1 {
