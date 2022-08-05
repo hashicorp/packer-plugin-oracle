@@ -190,6 +190,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"image_name":                   &hcldec.AttrSpec{Name: "image_name", Type: cty.String, Required: false},
 		"image_compartment_ocid":       &hcldec.AttrSpec{Name: "image_compartment_ocid", Type: cty.String, Required: false},
 		"image_launch_mode":            &hcldec.AttrSpec{Name: "image_launch_mode", Type: cty.String, Required: false},
+		"nic_attachment_type":          &hcldec.AttrSpec{Name: "nic_attachment_type", Type: cty.String, Required: false},
 		"instance_name":                &hcldec.AttrSpec{Name: "instance_name", Type: cty.String, Required: false},
 		"instance_tags":                &hcldec.AttrSpec{Name: "instance_tags", Type: cty.Map(cty.String), Required: false},
 		"instance_defined_tags_json":   &hcldec.AttrSpec{Name: "instance_defined_tags_json", Type: cty.String, Required: false},
