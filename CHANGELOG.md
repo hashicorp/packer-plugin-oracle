@@ -1,8 +1,5 @@
 # CHANGELOG
 
-## Unreleased
-* Support NetworkAttachmentType and LaunchMode default updates to the ImageCapabilitySchema [GH-46]
- 
 ## 1.0.2 (Unreleased)
 * New option: `skip_create_image` which is useful during a build test stage [GH-38]
 * Add the image OCID to the default output [GH-35]
