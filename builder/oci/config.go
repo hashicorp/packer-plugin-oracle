@@ -422,6 +422,18 @@ func (c *Config) Prepare(raws ...interface{}) error {
 		}
 	}
 
+	// Validate LaunchMode
+	if c.LaunchMode != "" && c.LaunchMode != "NATIVE" && c.LaunchMode != "EMULATED" && c.LaunchMode != "PARAVIRTUALIZED" && c.LaunchMode != "CUSTOM" {
+		errs = packersdk.MultiErrorAppend(
+			errs, errors.New("LaunchMode must be one of NATIVE, EMULATED, PARAVIRTUALIZED, or CUSTOM"))
+	}
+
+	// Validate NicAttachmentType
+	if c.NicAttachmentType != "" && c.NicAttachmentType != "VFIO" && c.NicAttachmentType != "E1000" && c.NicAttachmentType != "PARAVIRTUALIZED" {
+		errs = packersdk.MultiErrorAppend(
+			errs, errors.New("NicAttachmentType must be one of VFIO, E1000, or PARAVIRTUALIZED"))
+	}
+
 	// Set default boot volume size to 50 if not set
 	// Check if size set is allowed by OCI
 	if c.BootVolumeSizeInGBs != 0 && (c.BootVolumeSizeInGBs < 50 || c.BootVolumeSizeInGBs > 16384) {
