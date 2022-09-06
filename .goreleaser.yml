@@ -69,7 +69,6 @@ builds:
       - openbsd
       - freebsd
       - windows
-      - solaris
     goarch:
       - amd64
       - '386'
@@ -77,10 +76,6 @@ builds:
     ignore:
       - goos: windows
         goarch: arm
-      - goos: solaris
-        goarch: arm
-      - goos: solaris
-        goarch: '386'
     binary: '{{ .ProjectName }}_v{{ .Version }}_{{ .Env.API_VERSION }}_{{ .Os }}_{{ .Arch }}'
 archives:
 - format: zip
