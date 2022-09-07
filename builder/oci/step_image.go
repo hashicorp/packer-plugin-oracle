@@ -42,6 +42,15 @@ func (s *stepImage) Run(ctx context.Context, state multistep.StateBag) multistep
 		return multistep.ActionHalt
 	}
 
+	ui.Say("Updating image schema...")
+	_, err = driver.UpdateImageCapabilitySchema(ctx, *image.Id)
+	if err != nil {
+		err = fmt.Errorf("Error updating image schema: %s", err)
+		ui.Error(err.Error())
+		state.Put("error", err)
+		return multistep.ActionHalt
+	}
+
 	// TODO(apryde): This is stale as .LifecycleState has changed to
 	// AVAILABLE at this point. Does it matter?
 	state.Put("image", image)

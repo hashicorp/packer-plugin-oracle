@@ -86,6 +86,7 @@ type FlatConfig struct {
 	ImageName                 *string                `mapstructure:"image_name" cty:"image_name" hcl:"image_name"`
 	ImageCompartmentID        *string                `mapstructure:"image_compartment_ocid" cty:"image_compartment_ocid" hcl:"image_compartment_ocid"`
 	LaunchMode                *string                `mapstructure:"image_launch_mode" cty:"image_launch_mode" hcl:"image_launch_mode"`
+	NicAttachmentType         *string                `mapstructure:"nic_attachment_type" cty:"nic_attachment_type" hcl:"nic_attachment_type"`
 	InstanceName              *string                `mapstructure:"instance_name" cty:"instance_name" hcl:"instance_name"`
 	InstanceTags              map[string]string      `mapstructure:"instance_tags" cty:"instance_tags" hcl:"instance_tags"`
 	InstanceDefinedTagsJson   *string                `mapstructure:"instance_defined_tags_json" required:"false" cty:"instance_defined_tags_json" hcl:"instance_defined_tags_json"`
@@ -189,6 +190,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"image_name":                   &hcldec.AttrSpec{Name: "image_name", Type: cty.String, Required: false},
 		"image_compartment_ocid":       &hcldec.AttrSpec{Name: "image_compartment_ocid", Type: cty.String, Required: false},
 		"image_launch_mode":            &hcldec.AttrSpec{Name: "image_launch_mode", Type: cty.String, Required: false},
+		"nic_attachment_type":          &hcldec.AttrSpec{Name: "nic_attachment_type", Type: cty.String, Required: false},
 		"instance_name":                &hcldec.AttrSpec{Name: "instance_name", Type: cty.String, Required: false},
 		"instance_tags":                &hcldec.AttrSpec{Name: "instance_tags", Type: cty.Map(cty.String), Required: false},
 		"instance_defined_tags_json":   &hcldec.AttrSpec{Name: "instance_defined_tags_json", Type: cty.String, Required: false},

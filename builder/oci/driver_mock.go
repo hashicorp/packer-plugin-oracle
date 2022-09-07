@@ -3,7 +3,7 @@ package oci
 import (
 	"context"
 
-	"github.com/oracle/oci-go-sdk/v36/core"
+	"github.com/oracle/oci-go-sdk/v65/core"
 )
 
 // driverMock implements the Driver interface and communicates with Oracle
@@ -14,6 +14,9 @@ type driverMock struct {
 
 	CreateImageID  string
 	CreateImageErr error
+
+	UpdateSchemaID  string
+	UpdateSchemaErr error
 
 	DeleteImageID  string
 	DeleteImageErr error
@@ -48,6 +51,15 @@ func (d *driverMock) CreateImage(ctx context.Context, id string) (core.Image, er
 	}
 	d.CreateImageID = id
 	return core.Image{Id: &id}, nil
+}
+
+// CreateImage creates a new custom image.
+func (d *driverMock) UpdateImageCapabilitySchema(ctx context.Context, imageId string) (core.UpdateComputeImageCapabilitySchemaResponse, error) {
+	if d.UpdateSchemaErr != nil {
+		return core.UpdateComputeImageCapabilitySchemaResponse{}, d.UpdateSchemaErr
+	}
+	d.UpdateSchemaID = imageId
+	return core.UpdateComputeImageCapabilitySchemaResponse{}, nil
 }
 
 // DeleteImage mocks deleting a custom image.

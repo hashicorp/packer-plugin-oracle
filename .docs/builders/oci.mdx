@@ -85,7 +85,10 @@ builder.
 In addition to the options defined there, a private key file
 can also be supplied to override the typical auto-generated key:
 
-@include 'packer-plugin-sdk/communicator/SSH-Private-Key-File-not-required.mdx'
+- `ssh_private_key_file` (string) - Path to a PEM encoded private key file to use to authenticate with SSH.
+  The `~` can be used in path and will be expanded to the home directory
+  of current user.
+
 
 ### Required configuration parameters
 
@@ -551,6 +554,13 @@ of `\\` (which will search for a literal back-slash).
   "availability_domain": "aaaa:PHX-AD-1",
   "base_image_filter": {
     "operating_system": "Oracle Linux",
+    "operating_system_version": "7.8",
+    "display_name_search": "^Oracle-Linux-7\\.8-2020\\.\\d+"
+  }
+  ...
+}
+```
+ux",
     "operating_system_version": "7.8",
     "display_name_search": "^Oracle-Linux-7\\.8-2020\\.\\d+"
   }
