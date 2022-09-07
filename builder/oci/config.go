@@ -20,8 +20,8 @@ import (
 	"github.com/hashicorp/packer-plugin-sdk/pathing"
 	"github.com/hashicorp/packer-plugin-sdk/template/config"
 	"github.com/hashicorp/packer-plugin-sdk/template/interpolate"
-	ocicommon "github.com/oracle/oci-go-sdk/v36/common"
-	ociauth "github.com/oracle/oci-go-sdk/v36/common/auth"
+	ocicommon "github.com/oracle/oci-go-sdk/v65/common"
+	ociauth "github.com/oracle/oci-go-sdk/v65/common/auth"
 )
 
 type CreateVNICDetails struct {
@@ -101,6 +101,7 @@ type Config struct {
 	ImageName          string            `mapstructure:"image_name"`
 	ImageCompartmentID string            `mapstructure:"image_compartment_ocid"`
 	LaunchMode         string            `mapstructure:"image_launch_mode"`
+	NicAttachmentType  string            `mapstructure:"nic_attachment_type"`
 
 	// Instance
 	InstanceName *string           `mapstructure:"instance_name"`
@@ -419,6 +420,18 @@ func (c *Config) Prepare(raws ...interface{}) error {
 			log.Printf("[DEBUG] base64 encoding user data...")
 			c.UserData = base64.StdEncoding.EncodeToString([]byte(c.UserData))
 		}
+	}
+
+	// Validate LaunchMode
+	if c.LaunchMode != "" && c.LaunchMode != "NATIVE" && c.LaunchMode != "EMULATED" && c.LaunchMode != "PARAVIRTUALIZED" && c.LaunchMode != "CUSTOM" {
+		errs = packersdk.MultiErrorAppend(
+			errs, errors.New("LaunchMode must be one of NATIVE, EMULATED, PARAVIRTUALIZED, or CUSTOM"))
+	}
+
+	// Validate NicAttachmentType
+	if c.NicAttachmentType != "" && c.NicAttachmentType != "VFIO" && c.NicAttachmentType != "E1000" && c.NicAttachmentType != "PARAVIRTUALIZED" {
+		errs = packersdk.MultiErrorAppend(
+			errs, errors.New("NicAttachmentType must be one of VFIO, E1000, or PARAVIRTUALIZED"))
 	}
 
 	// Set default boot volume size to 50 if not set

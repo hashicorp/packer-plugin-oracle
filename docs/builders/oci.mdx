@@ -255,6 +255,9 @@ or configured for the default OCI CLI authenticaton profile.
   [Oracle CLI docs](https://docs.cloud.oracle.com/en-us/iaas/tools/oci-cli/2.12.5/oci_cli_docs/cmdref/compute/image/create.html#cmdoption-launch-mode)
   for more information about these modes.
 
+- `nic_attachment_type` (string) - Emulation type for the NIC card of the image.
+  Valid values are `"E1000"`, `"VFIO"`, and `"PARAVIRTUALIZED"`. For applications that require VFIO networking for performance reasons this setting allows for the image to default to this network type. 
+
 - `use_private_ip` (boolean) - Use private ip addresses to connect to the
   instance via ssh.
 

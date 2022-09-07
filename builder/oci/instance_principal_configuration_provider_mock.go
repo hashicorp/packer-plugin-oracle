@@ -4,7 +4,7 @@ import (
 	"crypto/rand"
 	"crypto/rsa"
 
-	"github.com/oracle/oci-go-sdk/v36/common"
+	"github.com/oracle/oci-go-sdk/v65/common"
 )
 
 // Mock struct to be used during testing to obtain Instance Principals.

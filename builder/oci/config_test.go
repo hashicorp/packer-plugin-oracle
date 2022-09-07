@@ -129,6 +129,17 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
+	t.Run("NicAttachmentType", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+		raw["nic_attachment_type"] = "VFIO"
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration %+v", errs)
+		}
+	})
+
 	t.Run("NoAccessConfig", func(t *testing.T) {
 		raw := testConfig(cfgFile)
 		raw["access_cfg_file"] = "/tmp/random/access/config/file/should/not/exist"
