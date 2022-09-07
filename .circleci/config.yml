@@ -58,12 +58,6 @@ jobs:
     steps:
       - build-and-persist-plugin-binary:
           GOOS: freebsd
-  build_solaris:
-    executor: golang
-    working_directory: ~/go/src/github.com/hashicorp/packer-plugin-oracle
-    steps:
-      - build-and-persist-plugin-binary:
-          GOOS: solaris
   build_openbsd:
     executor: golang
     working_directory: ~/go/src/github.com/hashicorp/packer-plugin-oracle
@@ -89,7 +83,6 @@ workflows:
       - build_windows
       - build_freebsd
       - build_openbsd
-      - build_solaris
       - store_artifacts:
           requires:
             - build_linux
@@ -98,4 +91,3 @@ workflows:
             - build_windows
             - build_freebsd
             - build_openbsd
-            - build_solaris
