@@ -6,7 +6,7 @@ require (
 	github.com/go-ini/ini v1.62.0
 	github.com/hashicorp/go-cleanhttp v0.5.2
 	github.com/hashicorp/go-oracle-terraform v0.17.0
-	github.com/hashicorp/hcl/v2 v2.13.0
+	github.com/hashicorp/hcl/v2 v2.14.1
 	github.com/hashicorp/packer-plugin-sdk v0.3.1
 	github.com/oracle/oci-go-sdk/v65 v65.4.0
 	github.com/smartystreets/goconvey v1.6.4 // indirect
