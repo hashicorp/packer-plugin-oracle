@@ -160,8 +160,9 @@ func (d *driverOCI) CreateInstance(ctx context.Context, publicKey string) (strin
 
 	if d.cfg.ShapeConfig.Ocpus != nil {
 		LaunchInstanceShapeConfigDetails := core.LaunchInstanceShapeConfigDetails{
-			Ocpus:       d.cfg.ShapeConfig.Ocpus,
-			MemoryInGBs: d.cfg.ShapeConfig.MemoryInGBs,
+			Ocpus:                   d.cfg.ShapeConfig.Ocpus,
+			MemoryInGBs:             d.cfg.ShapeConfig.MemoryInGBs,
+			BaselineOcpuUtilization: core.LaunchInstanceShapeConfigDetailsBaselineOcpuUtilizationEnum(*d.cfg.ShapeConfig.BaselineOcpuUtilization),
 		}
 		instanceDetails.ShapeConfig = &LaunchInstanceShapeConfigDetails
 	}
