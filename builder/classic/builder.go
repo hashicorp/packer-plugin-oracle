@@ -194,6 +194,8 @@ func (b *Builder) Run(ctx context.Context, ui packersdk.Ui, hook packersdk.Hook)
 
 	// Build the artifact and return it
 	artifact := &Artifact{
+		APIEndpoint:      b.config.APIEndpoint,
+		SourceImageList:  b.config.SourceImageList,
 		ImageListVersion: state.Get("image_list_version").(int),
 		MachineImageName: state.Get("machine_image_name").(string),
 		MachineImageFile: state.Get("machine_image_file").(string),

@@ -3,7 +3,10 @@ package oci
 import (
 	"context"
 	"fmt"
+	"log"
+	"strconv"
 
+	"github.com/hashicorp/packer-plugin-sdk/packer/registry/image"
 	"github.com/oracle/oci-go-sdk/v65/core"
 )
 
@@ -46,12 +49,49 @@ func (a *Artifact) String() string {
 	)
 }
 
-// State ...
 func (a *Artifact) State(name string) interface{} {
+	if name == image.ArtifactStateURI {
+		return a.buildHCPackerRegistryMetadata()
+	}
+
 	return a.StateData[name]
 }
 
 // Destroy deletes the custom image associated with the artifact.
 func (a *Artifact) Destroy() error {
 	return a.driver.DeleteImage(context.TODO(), *a.Image.Id)
+}
+
+func (a *Artifact) buildHCPackerRegistryMetadata() interface{} {
+
+	labels := map[string]interface{}{}
+
+	if a.Image.BillableSizeInGBs != nil {
+		labels["billable_size_in_gbs"] = strconv.FormatInt(*a.Image.BillableSizeInGBs, 10)
+	}
+
+	if a.Image.CompartmentId != nil {
+		labels["compartment_id"] = *a.Image.CompartmentId
+	}
+
+	if a.Image.LaunchMode != "" {
+		labels["launch_mode"] = string(a.Image.LaunchMode)
+	}
+
+	if a.Image.OperatingSystem != nil {
+		labels["operating_system"] = *a.Image.OperatingSystem
+	}
+
+	if a.Image.OperatingSystemVersion != nil {
+		labels["operating_system_version"] = *a.Image.OperatingSystemVersion
+	}
+
+	img, err := image.FromArtifact(a, image.WithRegion(a.Region), image.WithSourceID(*a.Image.BaseImageId), image.SetLabels(labels))
+
+	if err != nil {
+		log.Printf("[TRACE] error encountered when creating HCP Packer registry image for artifact: %s", err)
+		return nil
+	}
+
+	return img
 }
