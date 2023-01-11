@@ -23,6 +23,24 @@ prior to using this builder if you have not done so already.
 The builder _does not_ manage images. Once it creates an image, it is up to you
 to use it or delete it.
 
+## Policy Reference
+
+When running this plugin as a non-administrative user, you will need to have OCI policies defined which will enable Packer to do its job.  
+
+The following represent minimal required policies for the plugin to operate:
+
+```
+Allow group PackerGroup to manage instance-family in compartment ${COMPARTMENT_NAME}
+Allow group PackerGroup to manage instance-images in compartment ${COMPARTMENT_NAME}
+Allow group PackerGroup to use virtual-network-family in compartment ${COMPARTMENT_NAME}
+Allow group PackerGroup to use compute-image-capability-schema in tenancy
+```
+
+This example assumes the user running Packer is in a group named 'PackerGroup'.  You will need to update ${COMPARTMENT_NAME} to the name of the
+compartment in which the plugin is managing resources.
+
+For more details on working with OCI Policies, please refer to the [OCI Policy Documentation](https://docs.oracle.com/en-us/iaas/Content/Identity/policiesgs/get-started-with-policies.htm)
+
 ## Authentication
 
 There are three authentication methods available for the OCI builder. The API
