@@ -1,6 +1,6 @@
 module github.com/hashicorp/packer-plugin-oracle
 
-go 1.17
+go 1.18
 
 require (
 	github.com/go-ini/ini v1.62.0
