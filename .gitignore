@@ -3,3 +3,4 @@ dist/*
 packer-plugin-oracle
 .vscode/launch.json
 .vscode/settings.json
+.docs
