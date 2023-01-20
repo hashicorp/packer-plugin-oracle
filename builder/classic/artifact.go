@@ -2,11 +2,16 @@ package classic
 
 import (
 	"fmt"
+	"log"
+
+	"github.com/hashicorp/packer-plugin-sdk/packer/registry/image"
 )
 
 // Artifact is an artifact implementation that contains Image List
 // and Machine Image info.
 type Artifact struct {
+	APIEndpoint      string
+	SourceImageList  string
 	MachineImageName string
 	MachineImageFile string
 	ImageListVersion int
@@ -40,10 +45,26 @@ func (a *Artifact) String() string {
 }
 
 func (a *Artifact) State(name string) interface{} {
+	if name == image.ArtifactStateURI {
+		return a.buildHCPackerRegistryMetadata()
+	}
+
 	return a.StateData[name]
 }
 
 // Destroy deletes the custom image associated with the artifact.
 func (a *Artifact) Destroy() error {
 	return nil
+}
+
+func (a *Artifact) buildHCPackerRegistryMetadata() interface{} {
+
+	img, err := image.FromArtifact(a, image.WithRegion(a.APIEndpoint), image.WithSourceID(a.SourceImageList))
+
+	if err != nil {
+		log.Printf("[TRACE] error encountered when creating HCP Packer registry image for artifact: %s", err)
+		return nil
+	}
+
+	return img
 }
