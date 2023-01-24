@@ -53,8 +53,9 @@ type ListImagesRequest struct {
 }
 
 type FlexShapeConfig struct {
-	Ocpus       *float32 `mapstructure:"ocpus" required:"false"`
-	MemoryInGBs *float32 `mapstructure:"memory_in_gbs" required:"false"`
+	Ocpus                   *float32 `mapstructure:"ocpus" required:"false"`
+	MemoryInGBs             *float32 `mapstructure:"memory_in_gbs" required:"false"`
+	BaselineOcpuUtilization *string  `mapstructure:"baseline_ocpu_utilization" required:"false"`
 }
 
 type Config struct {
@@ -337,6 +338,11 @@ func (c *Config) Prepare(raws ...interface{}) error {
 	if c.ShapeConfig.MemoryInGBs != nil && c.ShapeConfig.Ocpus == nil {
 		errs = packersdk.MultiErrorAppend(
 			errs, errors.New("'Ocpus' must be specified if memory_in_gbs is specified"))
+	}
+
+	if c.ShapeConfig.BaselineOcpuUtilization != nil && c.ShapeConfig.Ocpus == nil {
+		errs = packersdk.MultiErrorAppend(
+			errs, errors.New("'Ocpus' must be specified if baseline_ocpu_utilization is specified"))
 	}
 
 	if (c.SubnetID == "") && (c.CreateVnicDetails.SubnetId == nil) {

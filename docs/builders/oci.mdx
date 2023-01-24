@@ -283,6 +283,8 @@ or configured for the default OCI CLI authenticaton profile.
   allocated to an instance. Options:
   - `ocpus` (required when using flexible shapes or memory_in_gbs is set) (float32) - The total number of OCPUs available to the instance.
   - `memory_in_gbs` (optional) (float32) - The total amount of memory, in gigabytes, available to the instance.
+  - `baseline_ocpu_utilization` (optional) (string) - The baseline OCPU utilization for a burstable instance.
+    Valid values are `"BASELINE_1_8"`, `"BASELINE_1_2"`and `"BASELINE_1_1"`.
 
 <!-- markdown-link-check-disable -->
 

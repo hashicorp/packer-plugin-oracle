@@ -250,8 +250,9 @@ func (*FlatCreateVNICDetails) HCL2Spec() map[string]hcldec.Spec {
 // FlatFlexShapeConfig is an auto-generated flat version of FlexShapeConfig.
 // Where the contents of a field with a `mapstructure:,squash` tag are bubbled up.
 type FlatFlexShapeConfig struct {
-	Ocpus       *float32 `mapstructure:"ocpus" required:"false" cty:"ocpus" hcl:"ocpus"`
-	MemoryInGBs *float32 `mapstructure:"memory_in_gbs" required:"false" cty:"memory_in_gbs" hcl:"memory_in_gbs"`
+	Ocpus                   *float32 `mapstructure:"ocpus" required:"false" cty:"ocpus" hcl:"ocpus"`
+	MemoryInGBs             *float32 `mapstructure:"memory_in_gbs" required:"false" cty:"memory_in_gbs" hcl:"memory_in_gbs"`
+	BaselineOcpuUtilization *string  `mapstructure:"baseline_ocpu_utilization" required:"false" cty:"baseline_ocpu_utilization" hcl:"baseline_ocpu_utilization"`
 }
 
 // FlatMapstructure returns a new FlatFlexShapeConfig.
@@ -266,8 +267,9 @@ func (*FlexShapeConfig) FlatMapstructure() interface{ HCL2Spec() map[string]hcld
 // The decoded values from this spec will then be applied to a FlatFlexShapeConfig.
 func (*FlatFlexShapeConfig) HCL2Spec() map[string]hcldec.Spec {
 	s := map[string]hcldec.Spec{
-		"ocpus":         &hcldec.AttrSpec{Name: "ocpus", Type: cty.Number, Required: false},
-		"memory_in_gbs": &hcldec.AttrSpec{Name: "memory_in_gbs", Type: cty.Number, Required: false},
+		"ocpus":                     &hcldec.AttrSpec{Name: "ocpus", Type: cty.Number, Required: false},
+		"memory_in_gbs":             &hcldec.AttrSpec{Name: "memory_in_gbs", Type: cty.Number, Required: false},
+		"baseline_ocpu_utilization": &hcldec.AttrSpec{Name: "baseline_ocpu_utilization", Type: cty.String, Required: false},
 	}
 	return s
 }
