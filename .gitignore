@@ -4,3 +4,4 @@ packer-plugin-oracle
 .vscode/launch.json
 .vscode/settings.json
 .docs
+crash.log
