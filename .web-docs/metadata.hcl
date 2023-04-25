@@ -4,6 +4,7 @@ integration {
   name = "Oracle"
   description = "The Oracle multi-component plugin can be used with HashiCorp Packer to create custom images."
   identifier = "packer/BrandonRomano/oracle"
+  flags = ["hcp-ready"]
   component {
     type = "builder"
     name = "Oracle OCI"
