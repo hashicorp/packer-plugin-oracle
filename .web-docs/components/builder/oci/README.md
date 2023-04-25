@@ -1,13 +1,3 @@
----
-description: |
-  The oracle-oci builder is able to create new custom images for use with Oracle
-  Cloud Infrastructure (OCI).
-page_title: Oracle OCI - Builders
-nav_title: OCI
----
-
-# Oracle Cloud Infrastructure (OCI) Builder
-
 Type: `oracle-oci`
 Artifact BuilderId: `packer.oracle.oci`
 
@@ -68,7 +58,7 @@ is associated with a specific user. This method requires the creation of appropr
 [Dynamic Groups](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingdynamicgroups.htm)
 and [Policies](https://docs.oracle.com/en-us/iaas/Content/Identity/Concepts/policygetstarted.htm).
 
-The [`use_instance_principals`](https://www.packer.io/docs/builders/oracle/oci#use_instance_principals)
+The [`use_instance_principals`](https://www.packer.io/docs/builder/oracle/oci#use_instance_principals)
 parameter is used to enable this method.
 
 The [`oci_instance_principals.pkr.hcl`](/example/oci_instance_principals.pkr.hcl)
@@ -103,7 +93,10 @@ builder.
 In addition to the options defined there, a private key file
 can also be supplied to override the typical auto-generated key:
 
-@include 'packer-plugin-sdk/communicator/SSH-Private-Key-File-not-required.mdx'
+- `ssh_private_key_file` (string) - Path to a PEM encoded private key file to use to authenticate with SSH.
+  The `~` can be used in path and will be expanded to the home directory
+  of current user.
+
 
 ### Required configuration parameters
 
