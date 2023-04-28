@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 source "oracle-oci" "instance_principal_example" {
   availability_domain     = "aaaa:PHX-AD-1"
   base_image_ocid         = "ocid1.image.oc1.phx.aaaaaaaa5yu6pw3riqtuhxzov7fdngi4tsteganmao54nq3pyxu3hxcuzmoa"

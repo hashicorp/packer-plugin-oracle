@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 // Package oci contains a packersdk.Builder implementation that builds Oracle
 // Bare Metal Cloud Services (OCI) images.
 package oci

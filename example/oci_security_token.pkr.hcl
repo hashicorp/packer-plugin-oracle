@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 source "oracle-oci" "security_token_example" {
   access_cfg_file         = "<config-file-path>"
   access_cfg_file_account = "<profile-name>"
