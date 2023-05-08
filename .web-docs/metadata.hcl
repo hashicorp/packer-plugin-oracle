@@ -7,12 +7,12 @@ integration {
   flags = ["hcp-ready"]
   component {
     type = "builder"
-    name = "Oracle OCI"
+    name = "Oracle Cloud Infrastructure"
     slug = "oci"
   }
   component {
     type = "builder"
-    name = "Oracle Cloud Infrastructure Classic"
+    name = "Oracle Cloud Infrastructure Classic Compute"
     slug = "classic"
   }
 }
