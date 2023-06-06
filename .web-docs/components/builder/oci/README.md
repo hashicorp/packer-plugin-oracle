@@ -344,7 +344,7 @@ Here is a basic example. Note that account specific configuration has been
 substituted with the letter `a` and OCIDS have been shortened for brevity.
 
 
-### HCL2
+**HCL2**
 
 ```hcl
 source "oracle-oci" "example" {
@@ -363,7 +363,7 @@ build {
 
 ```
 
-### JSON
+**JSON**
 
 ```json
 {
@@ -385,7 +385,7 @@ build {
 Here is a basic example. Note that account specific configuration has been
 substituted with the letter `a` and OCIDS have been shortened for brevity.
 
-### HCL2
+**HCL2**
 
 ```hcl
 source "oracle-oci" "example" {
@@ -405,7 +405,7 @@ build {
 
 ```
 
-### JSON
+**JSON**
 
 ```json
 {
@@ -459,7 +459,7 @@ required for Packer to successfully SSH into the instance. NSGs are a property
 of the virtual network interface card (VNIC) attached to the instance, and
 are listed in `nsg_ids` under `create_vnic_details`.
 
-### HCL2
+**HCL2**
 
 ```hcl
 locals {
@@ -499,7 +499,7 @@ build {
 }
 ```
 
-### JSON
+**JSON**
 
 ```json
 {

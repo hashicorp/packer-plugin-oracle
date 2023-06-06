@@ -322,7 +322,7 @@ Here is a basic example. Note that account specific configuration has been
 obfuscated; you will need to add a working `username`, `password`,
 `identity_domain`, and `api_endpoint` in order for the example to work.
 
-### HCL2
+**HCL2**
 
 ```hcl
 locals { timestamp = regex_replace(timestamp(), "[- TZ:]", "") }
@@ -349,7 +349,7 @@ build {
 }
 ```
 
-### JSON
+**JSON**
 
 ```json
 {
@@ -405,7 +405,7 @@ Save this file as `windows_attributes.json`:
 Following is a minimal but working Packer config that references this
 attributes file:
 
-### HCL2
+**HCL2**
 
 ```hcl
 
@@ -457,7 +457,7 @@ build {
 
 ```
 
-### JSON
+**JSON**
 
 ```json
 {
@@ -499,7 +499,7 @@ build {
 Here is an example using a persistent volume. Note the `persistent_volume_size`
 setting.
 
-### HCL2
+**HCL2**
 
 ```hcl
 
@@ -549,7 +549,7 @@ build {
 
 ```
 
-### JSON
+**JSON**
 
 ```json
 {
