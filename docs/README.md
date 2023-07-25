@@ -11,7 +11,7 @@ Then, run [`packer init`](https://www.packer.io/docs/commands/init).
 ```hcl
 packer {
   required_plugins {
-    amazon = {
+    oracle = {
       source  = "github.com/hashicorp/oracle"
       version = "~> 1"
     }
