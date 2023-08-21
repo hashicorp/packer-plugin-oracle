@@ -28,9 +28,9 @@ $ packer plugins install github.com/hashicorp/oracle
 
 ### Builders
 
-- [oracle-classic](./builders/classic.mdx) - Create custom images in Oracle Cloud Infrastructure
+- [oracle-classic](/packer/integrations/hashicorp/oracle/latest/components/builder/oci) - Create custom images in Oracle Cloud Infrastructure
     Classic Compute by launching a source instance and creating an image list
     from a snapshot of it after provisioning.
 
-- [oracle-oci](./builders/oci.mdx) - Create custom images in Oracle Cloud Infrastructure (OCI) by
+- [oracle-oci](/packer/integrations/hashicorp/oracle/latest/components/builder/classic) - Create custom images in Oracle Cloud Infrastructure (OCI) by
     launching a base instance and creating an image from it after provisioning.
