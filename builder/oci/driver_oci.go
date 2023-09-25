@@ -102,8 +102,7 @@ func (d *driverOCI) CreateInstance(ctx context.Context, publicKey string) (strin
 	if d.cfg.BaseImageID != "" {
 		imageId = &d.cfg.BaseImageID
 	} else {
-		// Pull images and determine which image ID to use, if BaseImageId not specified
-		response, err := d.computeClient.ListImages(ctx, core.ListImagesRequest{
+		request := core.ListImagesRequest{
 			CompartmentId:          d.cfg.BaseImageFilter.CompartmentId,
 			DisplayName:            d.cfg.BaseImageFilter.DisplayName,
 			OperatingSystem:        d.cfg.BaseImageFilter.OperatingSystem,
@@ -113,31 +112,44 @@ func (d *driverOCI) CreateInstance(ctx context.Context, publicKey string) (strin
 			SortBy:                 "TIMECREATED",
 			SortOrder:              "DESC",
 			RequestMetadata:        requestMetadata,
-		})
-		if err != nil {
-			return "", err
+			Page:                   common.String(""),
 		}
-		if len(response.Items) == 0 {
-			return "", errors.New("base_image_filter returned no images")
-		}
-		if d.cfg.BaseImageFilter.DisplayNameSearch != nil {
-			// Return most recent image that matches regex
-			imageNameRegex, err := regexp.Compile(*d.cfg.BaseImageFilter.DisplayNameSearch)
+
+		for request.Page != nil && imageId == nil {
+			// Pull images and determine which image ID to use, if BaseImageId not specified
+			response, err := d.computeClient.ListImages(ctx, request)
 			if err != nil {
 				return "", err
 			}
-			for _, image := range response.Items {
-				if imageNameRegex.MatchString(*image.DisplayName) {
-					imageId = image.Id
-					break
+
+			if len(response.Items) == 0 && response.OpcNextPage == nil {
+				return "", errors.New("base_image_filter returned no images")
+			}
+
+			if d.cfg.BaseImageFilter.DisplayNameSearch != nil {
+				// Return most recent image that matches regex
+				imageNameRegex, err := regexp.Compile(*d.cfg.BaseImageFilter.DisplayNameSearch)
+				if err != nil {
+					return "", err
+				}
+				for _, image := range response.Items {
+					if imageNameRegex.MatchString(*image.DisplayName) {
+						imageId = image.Id
+						break
+					}
+				}
+
+				if imageId == nil && response.OpcNextPage == nil {
+					return "", errors.New("No image matched display_name_search criteria")
+				}
+			} else {
+				// If no regex provided, simply return most recent image pulled
+				if len(response.Items) > 0 {
+					imageId = response.Items[0].Id
 				}
 			}
-			if imageId == nil {
-				return "", errors.New("No image matched display_name_search criteria")
-			}
-		} else {
-			// If no regex provided, simply return most recent image pulled
-			imageId = response.Items[0].Id
+
+			request.Page = response.OpcNextPage
 		}
 	}
 
