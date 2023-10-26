@@ -14,13 +14,6 @@ prior to using this builder if you have not done so already.
 The builder _does not_ manage images. Once it creates an image, it is up to you
 to use it or delete it.
 
-## Authorization
-
-This builder authenticates API calls to Oracle Cloud Infrastructure Classic
-Compute using basic authentication (user name and password). To read more, see
-the [authentication
-documentation](https://docs.oracle.com/en/cloud/iaas/compute-iaas-cloud/stcsa/Authentication.html)
-
 ## Configuration Reference
 
 There are many configuration options available for the `oracle-classic`
