@@ -14,6 +14,7 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/hashicorp/packer-plugin-sdk/uuid"
 	"github.com/oracle/oci-go-sdk/v65/common"
 	core "github.com/oracle/oci-go-sdk/v65/core"
 )
@@ -140,7 +141,7 @@ func (d *driverOCI) CreateInstance(ctx context.Context, publicKey string) (strin
 				}
 
 				if imageId == nil && response.OpcNextPage == nil {
-					return "", errors.New("No image matched display_name_search criteria")
+					return "", errors.New("no image matched display_name_search criteria")
 				}
 			} else {
 				// If no regex provided, simply return most recent image pulled
@@ -228,6 +229,73 @@ func (d *driverOCI) UpdateImageCapabilitySchema(ctx context.Context, imageId str
 	if err != nil {
 		return core.UpdateComputeImageCapabilitySchemaResponse{}, err
 	}
+	// no schema found, need to download the global image schema, use it as a base to create an image schema for this image
+	// and create the schema
+	if len(schema.Items) < 1 {
+		// get the global schema list
+		globalSchemaList, err := d.computeClient.ListComputeGlobalImageCapabilitySchemas(context.Background(), core.ListComputeGlobalImageCapabilitySchemasRequest{})
+		if err != nil {
+			return core.UpdateComputeImageCapabilitySchemaResponse{}, err
+		}
+		if len(globalSchemaList.Items) < 1 {
+			return core.UpdateComputeImageCapabilitySchemaResponse{}, errors.New("unable to find any global schemas")
+		}
+
+		// get the global schema based on ocid and latest version guid
+		var globalSchemaId = globalSchemaList.Items[0].Id
+		var globalSchemaCurrentVersion = globalSchemaList.Items[0].CurrentVersionName
+		globalSchema, err := d.computeClient.GetComputeGlobalImageCapabilitySchemaVersion(context.Background(),
+			core.GetComputeGlobalImageCapabilitySchemaVersionRequest{ComputeGlobalImageCapabilitySchemaId: globalSchemaId,
+				ComputeGlobalImageCapabilitySchemaVersionName: globalSchemaCurrentVersion})
+		if err != nil {
+			return core.UpdateComputeImageCapabilitySchemaResponse{}, err
+		}
+
+		// update schema data to replace all instances of "source": "GLOBAL" with "source": "IMAGE"
+		newSchemaData := make(map[string]core.ImageCapabilitySchemaDescriptor)
+		for key := range globalSchema.SchemaData {
+			val := globalSchema.SchemaData[key]
+			if boolVal, ok := val.(core.BooleanImageCapabilitySchemaDescriptor); ok {
+				newSchemaData[key] = core.BooleanImageCapabilitySchemaDescriptor{Source: "IMAGE", DefaultValue: boolVal.DefaultValue}
+			}
+			if enumIntVal, ok := val.(core.EnumIntegerImageCapabilityDescriptor); ok {
+				destArr := make([]int, len(enumIntVal.Values))
+				copy(destArr, enumIntVal.Values)
+				newVal := core.EnumIntegerImageCapabilityDescriptor{Source: "IMAGE", DefaultValue: enumIntVal.DefaultValue, Values: destArr}
+				newSchemaData[key] = newVal
+			}
+			if enumStringVal, ok := val.(core.EnumStringImageCapabilitySchemaDescriptor); ok {
+				destArr := make([]string, len(enumStringVal.Values))
+				copy(destArr, enumStringVal.Values)
+				newVal := core.EnumStringImageCapabilitySchemaDescriptor{Source: "IMAGE", DefaultValue: enumStringVal.DefaultValue, Values: destArr}
+				newSchemaData[key] = newVal
+			}
+		}
+
+		// create a new schema for the image by duplication the global schema
+		req := core.CreateComputeImageCapabilitySchemaRequest{CreateComputeImageCapabilitySchemaDetails: core.CreateComputeImageCapabilitySchemaDetails{
+			DisplayName:   common.String(fmt.Sprintf("Default Image Capability Schema for %s", d.cfg.ImageName)),
+			ImageId:       &imageId,
+			SchemaData:    newSchemaData,
+			CompartmentId: &d.cfg.ImageCompartmentID,
+			ComputeGlobalImageCapabilitySchemaVersionName: globalSchema.ComputeGlobalImageCapabilitySchemaVersion.Name,
+		},
+			OpcRetryToken: common.String(uuid.TimeOrderedUUID()),
+		}
+		_, err = d.computeClient.CreateComputeImageCapabilitySchema(context.Background(), req)
+		if err != nil {
+			return core.UpdateComputeImageCapabilitySchemaResponse{}, err
+		}
+
+		// try to get the schema again, now it should be good
+		schema, err = d.computeClient.ListComputeImageCapabilitySchemas(context.Background(),
+			core.ListComputeImageCapabilitySchemasRequest{
+				ImageId: &imageId,
+			})
+		if err != nil {
+			return core.UpdateComputeImageCapabilitySchemaResponse{}, err
+		}
+	}
 
 	// update the schema to add the new custom fields
 	if d.cfg.LaunchMode != "" {
@@ -281,7 +349,7 @@ func (d *driverOCI) GetInstanceIP(ctx context.Context, id string) (string, error
 		RequestMetadata: requestMetadata,
 	})
 	if err != nil {
-		return "", fmt.Errorf("Error getting VNIC details: %s", err)
+		return "", fmt.Errorf("error getting VNIC details: %s", err)
 	}
 
 	if d.cfg.UsePrivateIP {
@@ -289,7 +357,7 @@ func (d *driverOCI) GetInstanceIP(ctx context.Context, id string) (string, error
 	}
 
 	if vnic.PublicIp == nil {
-		return "", fmt.Errorf("Error getting VNIC Public Ip for: %s", id)
+		return "", fmt.Errorf("error getting VNIC Public Ip for: %s", id)
 	}
 
 	return *vnic.PublicIp, nil
@@ -376,9 +444,9 @@ func waitForResourceToReachState(getResourceState func(string) (string, error), 
 		} else if state == terminalState {
 			return nil
 		}
-		return fmt.Errorf("Unexpected resource state %q, expecting a waiting state %s or terminal state  %q ", state, waitStates, terminalState)
+		return fmt.Errorf("unexpected resource state %q, expecting a waiting state %s or terminal state  %q ", state, waitStates, terminalState)
 	}
-	return fmt.Errorf("Maximum number of retries (%d) exceeded; resource did not reach state %q", maxRetries, terminalState)
+	return fmt.Errorf("maximum number of retries (%d) exceeded; resource did not reach state %q", maxRetries, terminalState)
 }
 
 // stringSliceContains loops through a slice of strings returning a boolean
