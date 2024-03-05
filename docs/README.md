@@ -60,7 +60,7 @@ The following represent minimal required policies for the plugin to operate:
 Allow group PackerGroup to manage instance-family in compartment ${COMPARTMENT_NAME}
 Allow group PackerGroup to manage instance-images in compartment ${COMPARTMENT_NAME}
 Allow group PackerGroup to use virtual-network-family in compartment ${COMPARTMENT_NAME}
-Allow group PackerGroup to use compute-image-capability-schema in tenancy
+Allow group PackerGroup to manage compute-image-capability-schema in tenancy
 ```
 
 This example assumes the user running Packer is in a group named 'PackerGroup'.  You will need to update ${COMPARTMENT_NAME} to the name of the
