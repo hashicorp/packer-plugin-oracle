@@ -220,7 +220,7 @@ func (c *Config) Prepare(raws ...interface{}) error {
 		// is assigned to c.configProvider otherwise testing fails because Instance
 		// Principals cannot be obtained.
 		if c.configProvider == nil {
-			// Even though the previous configuraion checks might fail we don't want
+			// Even though the previous configuration checks might fail we don't want
 			// to skip this step. It seems that the logic behind the checks in this
 			// file is to check everything even getting the configProvider.
 			c.configProvider, err = ociauth.InstancePrincipalConfigurationProvider()
