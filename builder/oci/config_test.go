@@ -398,6 +398,7 @@ func TestConfig(t *testing.T) {
 		"tenancy_ocid",
 		"region",
 		"fingerprint",
+		"key",
 		"key_file",
 		"pass_phrase",
 	}

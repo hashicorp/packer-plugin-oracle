@@ -108,7 +108,7 @@ based on which authentication method is used.
 - `use_instance_principals` (boolean) - Whether to use [Instance
   Principals](https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm)
   instead of User Principals. If this key is set to true, setting any one of the `access_cfg_file`,
-  `access_cfg_file_account`, `region`, `tenancy_ocid`, `user_ocid`, `key_file`, `fingerprint`,
+  `access_cfg_file_account`, `region`, `tenancy_ocid`, `user_ocid`, `key`, `key_file`, `fingerprint`,
   `pass_phrase` parameters will cause an invalid configuration error.
   Defaults to `false`.
 
@@ -141,6 +141,9 @@ or configured for the default OCI CLI authenticaton profile.
 - `user_ocid` (string) - The OCID of the user calling the OCI API. Overrides value provided by the
   [OCI config file](https://docs.us-phoenix-1.oraclecloud.com/Content/API/Concepts/sdkconfig.htm)
   if present. This cannot be used along with the `use_instance_principals` key.
+
+- `key` (string) - The contents of the OCI API signing key. Overrides value provided by the `key_file`.
+  This cannot be used along with the `use_instance_principals` key.
 
 - `key_file` (string) - Full path and filename of the OCI API signing key. Overrides value provided
   by the [OCI config file](https://docs.us-phoenix-1.oraclecloud.com/Content/API/Concepts/sdkconfig.htm)
