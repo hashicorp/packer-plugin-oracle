@@ -91,6 +91,7 @@ type Config struct {
 	TenancyID    string `mapstructure:"tenancy_ocid"`
 	Region       string `mapstructure:"region"`
 	Fingerprint  string `mapstructure:"fingerprint"`
+	Key          string `mapstructure:"key"`
 	KeyFile      string `mapstructure:"key_file"`
 	PassPhrase   string `mapstructure:"pass_phrase"`
 	UsePrivateIP bool   `mapstructure:"use_private_ip"`
@@ -193,28 +194,31 @@ func (c *Config) Prepare(raws ...interface{}) error {
 		// key involved.
 		var message string = " cannot be present when use_instance_principals is set to true."
 		if c.AccessCfgFile != "" {
-			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("access_cfg_file"+message))
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("'access_cfg_file'"+message))
 		}
 		if c.AccessCfgFileAccount != "" {
-			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("access_cfg_file_account"+message))
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("'access_cfg_file_account'"+message))
 		}
 		if c.UserID != "" {
-			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("user_ocid"+message))
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("'user_ocid'"+message))
 		}
 		if c.TenancyID != "" {
-			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("tenancy_ocid"+message))
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("'tenancy_ocid'"+message))
 		}
 		if c.Region != "" {
-			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("region"+message))
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("'region'"+message))
 		}
 		if c.Fingerprint != "" {
-			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("fingerprint"+message))
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("'fingerprint'"+message))
+		}
+		if c.Key != "" {
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("'key'"+message))
 		}
 		if c.KeyFile != "" {
-			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("key_file"+message))
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("'key_file'"+message))
 		}
 		if c.PassPhrase != "" {
-			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("pass_phrase"+message))
+			errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("'pass_phrase'"+message))
 		}
 		// This check is used to facilitate testing. During testing a Mock struct
 		// is assigned to c.configProvider otherwise testing fails because Instance
@@ -245,6 +249,7 @@ func (c *Config) Prepare(raws ...interface{}) error {
 			c.AccessCfgFileAccount = "DEFAULT"
 		}
 
+		// Read API signing key
 		var keyContent []byte
 		if c.KeyFile != "" {
 			path, err := pathing.ExpandUser(c.KeyFile)
@@ -258,7 +263,11 @@ func (c *Config) Prepare(raws ...interface{}) error {
 				return err
 			}
 		}
+		if c.Key != "" {
+			keyContent = []byte(c.Key)
+		}
 
+		// Providers
 		fileProvider, _ := ocicommon.ConfigurationProviderFromFileWithProfile(c.AccessCfgFile, c.AccessCfgFileAccount, c.PassPhrase)
 		if c.Region == "" {
 			var region string
