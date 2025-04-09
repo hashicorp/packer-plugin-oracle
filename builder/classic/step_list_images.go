@@ -28,7 +28,7 @@ func (s *stepListImages) Run(ctx context.Context, state multistep.StateBag) mult
 	imList, err := imageListClient.GetImageList(&getInput)
 	if err != nil {
 		// If the list didn't exist, create it.
-		ui.Say(fmt.Sprintf(err.Error()))
+		ui.Say(err.Error())
 		ui.Say(fmt.Sprintf("Destination image list %s does not exist; Creating it...",
 			config.DestImageList))
 
