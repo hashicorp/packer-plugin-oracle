@@ -1,7 +1,7 @@
 // Copyright (c) HashiCorp, Inc.
 // SPDX-License-Identifier: MPL-2.0
 
-//go:generate packer-sdc mapstructure-to-hcl2 -type Config,CreateVNICDetails,ListImagesRequest,FlexShapeConfig
+//go:generate packer-sdc mapstructure-to-hcl2 -type Config,CreateVNICDetails,ListImagesRequest,FlexShapeConfig,InstanceOptionsConfig
 
 package oci
 
@@ -53,6 +53,10 @@ type ListImagesRequest struct {
 	OperatingSystem        *string `mapstructure:"operating_system"`
 	OperatingSystemVersion *string `mapstructure:"operating_system_version"`
 	Shape                  *string `mapstructure:"shape"`
+}
+
+type InstanceOptionsConfig struct {
+	AreLegacyImdsEndpointsDisabled *bool `mapstructure:"are_legacy_imds_endpoints_disabled" required:"false"`
 }
 
 type FlexShapeConfig struct {
@@ -115,6 +119,7 @@ type Config struct {
 	// ref: https://github.com/hashicorp/hcl/issues/291#issuecomment-496347585
 	InstanceDefinedTagsJson string                            `mapstructure:"instance_defined_tags_json" required:"false"`
 	InstanceDefinedTags     map[string]map[string]interface{} `mapstructure:"instance_defined_tags" mapstructure-to-hcl2:",skip"`
+	InstanceOptions         InstanceOptionsConfig             `mapstructure:"instance_options"`
 	Shape                   string                            `mapstructure:"shape"`
 	ShapeConfig             FlexShapeConfig                   `mapstructure:"shape_config"`
 	BootVolumeSizeInGBs     int64                             `mapstructure:"disk_size"`

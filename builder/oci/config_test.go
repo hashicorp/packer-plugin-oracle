@@ -365,6 +365,40 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
+	t.Run("legacy_imds_endpoints_disabled", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		imdsDisabled := c.InstanceOptions.AreLegacyImdsEndpointsDisabled
+		if imdsDisabled != nil && *imdsDisabled {
+			t.Errorf("Expected Legacy IMDS to be enabled")
+		}
+	})
+
+	t.Run("legacy_imds_endpoints_disabled", func(t *testing.T) {
+		instanceOptions := map[string]interface{}{
+			"are_legacy_imds_endpoints_disabled": true,
+		}
+		raw := testConfig(cfgFile)
+		raw["instance_options"] = instanceOptions
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		imdsDisabled := c.InstanceOptions.AreLegacyImdsEndpointsDisabled
+		if imdsDisabled != nil && !*imdsDisabled {
+			t.Errorf("Expected Legacy IMDS to be disabled")
+		}
+	})
+
 	t.Run("create_vnic_details.defined_tags_json", func(t *testing.T) {
 		createVNICDetails := map[string]interface{}{
 			"defined_tags_json": `{ "fo": { "o" : "bar" } }`,
