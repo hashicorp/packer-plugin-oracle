@@ -365,7 +365,7 @@ func TestConfig(t *testing.T) {
 		}
 	})
 
-	t.Run("legacy_imds_endpoints_disabled", func(t *testing.T) {
+	t.Run("legacy_imds_endpoints_enabled", func(t *testing.T) {
 		raw := testConfig(cfgFile)
 
 		var c Config
