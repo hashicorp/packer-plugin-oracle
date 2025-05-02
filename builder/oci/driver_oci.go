@@ -174,6 +174,12 @@ func (d *driverOCI) CreateInstance(ctx context.Context, publicKey string) (strin
 		Metadata:           metadata,
 	}
 
+	if d.cfg.InstanceOptions.AreLegacyImdsEndpointsDisabled != nil {
+		InstanceOptionsDetails := core.InstanceOptions{AreLegacyImdsEndpointsDisabled: d.cfg.InstanceOptions.AreLegacyImdsEndpointsDisabled}
+
+		instanceDetails.InstanceOptions = &InstanceOptionsDetails
+	}
+
 	if d.cfg.ShapeConfig.Ocpus != nil {
 		LaunchInstanceShapeConfigDetails := core.LaunchInstanceShapeConfigDetails{
 			Ocpus:       d.cfg.ShapeConfig.Ocpus,
