@@ -178,6 +178,9 @@ or configured for the default OCI CLI authenticaton profile.
   to the instance used for the image creation process. Only works on old-style JSON templates. For HCL2 templates,
   use [instance_defined_tags_json](#instance_defined_tags_json) instead.
 
+- `instance_options` (object) - An optional set of mutable instance options.  Options:
+  - `are_legacy_imds_endpoints_disabled` (optional) (bool) - Indicates whether to disable the legacy (/v1) instance metadata service endpoints.  Default is false.
+
 - `create_vnic_details` (map of strings) - Specify details for the virtual network interface card (VNIC)
   that is attached to the instance. Possible keys (all optional) are: `assign_public_ip` (bool),
   `display_name` (string), `hostname_lable` (string), `nsg_ids` (list), `private_ip` (string),
