@@ -118,6 +118,7 @@ type Config struct {
 	Shape                   string                            `mapstructure:"shape"`
 	ShapeConfig             FlexShapeConfig                   `mapstructure:"shape_config"`
 	BootVolumeSizeInGBs     int64                             `mapstructure:"disk_size"`
+	InstanceOptionsAreLegacyImdsEndpointsDisabled *bool `mapstructure:"instance_options_are_legacy_imds_endpoints_disabled" required:"false"`
 
 	// Metadata optionally contains custom metadata key/value pairs provided in the
 	// configuration. While this can be used to set metadata["user_data"] the explicit
