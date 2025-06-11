@@ -161,6 +161,12 @@ func (d *driverOCI) CreateInstance(ctx context.Context, publicKey string) (strin
 		InstanceSourceDetails.BootVolumeSizeInGBs = &d.cfg.BootVolumeSizeInGBs
 	}
 
+	// Build instance options
+	instanceOptions := core.InstanceOptions{}
+	if d.cfg.InstanceOptionsAreLegacyImdsEndpointsDisabled != nil {
+		instanceOptions.AreLegacyImdsEndpointsDisabled = d.cfg.InstanceOptionsAreLegacyImdsEndpointsDisabled
+	}
+
 	// Build instance details
 	instanceDetails := core.LaunchInstanceDetails{
 		AvailabilityDomain: &d.cfg.AvailabilityDomain,
@@ -172,6 +178,7 @@ func (d *driverOCI) CreateInstance(ctx context.Context, publicKey string) (strin
 		Shape:              &d.cfg.Shape,
 		SourceDetails:      InstanceSourceDetails,
 		Metadata:           metadata,
+		InstanceOptions:    &instanceOptions,
 	}
 
 	if d.cfg.ShapeConfig.Ocpus != nil {

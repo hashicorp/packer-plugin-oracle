@@ -33,7 +33,8 @@ type driverMock struct {
 
 	WaitForInstanceStateErr error
 
-	cfg *Config
+	cfg                                                 *Config
+	CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled *bool
 }
 
 // CreateInstance creates a new compute instance.
@@ -43,6 +44,12 @@ func (d *driverMock) CreateInstance(ctx context.Context, publicKey string) (stri
 	}
 
 	d.CreateInstanceID = "ocid1..."
+	if d.cfg != nil {
+		// Capture the value from the Config struct that the step is expected to use.
+		// This assumes that if cfg.InstanceOptionsAreLegacyImdsEndpointsDisabled is set,
+		// stepCreateInstance would correctly prepare it for the actual launch details.
+		d.CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled = d.cfg.InstanceOptionsAreLegacyImdsEndpointsDisabled
+	}
 
 	return d.CreateInstanceID, nil
 }
