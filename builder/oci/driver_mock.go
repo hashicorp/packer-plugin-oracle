@@ -33,7 +33,7 @@ type driverMock struct {
 
 	WaitForInstanceStateErr error
 
-	cfg                                                 *Config
+	cfg                                                   *Config
 	CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled *bool
 }
 
