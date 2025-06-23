@@ -38,6 +38,62 @@ func TestStepCreateInstance(t *testing.T) {
 	}
 }
 
+func TestStepCreateInstance_InstanceOptions(t *testing.T) {
+	runTest := func(t *testing.T, value *bool, expected *bool) {
+		state := testState() // testState already calls Prepare on a base config
+		state.Put("publicKey", "key")
+
+		config := state.Get("config").(*Config)
+		config.InstanceOptionsAreLegacyImdsEndpointsDisabled = value
+		step := new(stepCreateInstance)
+		defer func() {
+			runErr := state.Get("error")
+			step.Cleanup(state)
+			if runErr == nil {
+				if _, ok := state.GetOk("error"); ok {
+					t.Logf("Warning: Cleanup reported an error: %v", state.Get("error"))
+				}
+			}
+		}()
+
+		driver := state.Get("driver").(*driverMock)
+		// driver.cfg is already pointing to the config from the state, which we've modified and re-prepared.
+
+		if action := step.Run(context.Background(), state); action != multistep.ActionContinue {
+			if err, ok := state.GetOk("error"); ok {
+				t.Fatalf("bad action: %#v with error: %v. Expected ActionContinue", action, err)
+			}
+			t.Fatalf("bad action: %#v. Expected ActionContinue", action)
+		}
+
+		if expected == nil {
+			if driver.CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled != nil {
+				t.Errorf("Expected CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled to be nil, got %v", *driver.CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled)
+			}
+		} else {
+			if driver.CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled == nil {
+				t.Errorf("Expected CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled to be %v, got nil", *expected)
+			} else if *driver.CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled != *expected {
+				t.Errorf("Expected CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled to be %v, got %v", *expected, *driver.CapturedInstanceOptionsAreLegacyImdsEndpointsDisabled)
+			}
+		}
+	}
+
+	t.Run("True", func(t *testing.T) {
+		bTrue := true
+		runTest(t, &bTrue, &bTrue)
+	})
+
+	t.Run("False", func(t *testing.T) {
+		bFalse := false
+		runTest(t, &bFalse, &bFalse)
+	})
+
+	t.Run("Nil", func(t *testing.T) {
+		runTest(t, nil, nil)
+	})
+}
+
 func TestStepCreateInstance_CreateInstanceErr(t *testing.T) {
 	state := testState()
 	state.Put("publicKey", "key")

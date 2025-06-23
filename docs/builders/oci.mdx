@@ -165,6 +165,8 @@ or configured for the default OCI CLI authenticaton profile.
 - `instance_name` (string) - The name to assign to the instance used for the image creation process.
   If not set a name of the form `instanceYYYYMMDDhhmmss` will be used.
 
+- `instance_options_are_legacy_imds_endpoints_disabled` (boolean) - If this is set to true, legacy IMDSv1 endpoints will be disabled on the instance. Defaults to `false`.
+
 - `instance_tags` (map of strings) - Add one or more freeform tags to the instance used for the
   image creation process.
 

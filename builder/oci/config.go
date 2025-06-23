@@ -113,11 +113,12 @@ type Config struct {
 	// HCL cannot be decoded into an interface so for HCL templates you must use the InstanceDefinedTagsJson option,
 	// To be used with https://www.packer.io/docs/templates/hcl_templates/functions/encoding/jsonencode
 	// ref: https://github.com/hashicorp/hcl/issues/291#issuecomment-496347585
-	InstanceDefinedTagsJson string                            `mapstructure:"instance_defined_tags_json" required:"false"`
-	InstanceDefinedTags     map[string]map[string]interface{} `mapstructure:"instance_defined_tags" mapstructure-to-hcl2:",skip"`
-	Shape                   string                            `mapstructure:"shape"`
-	ShapeConfig             FlexShapeConfig                   `mapstructure:"shape_config"`
-	BootVolumeSizeInGBs     int64                             `mapstructure:"disk_size"`
+	InstanceDefinedTagsJson                       string                            `mapstructure:"instance_defined_tags_json" required:"false"`
+	InstanceDefinedTags                           map[string]map[string]interface{} `mapstructure:"instance_defined_tags" mapstructure-to-hcl2:",skip"`
+	Shape                                         string                            `mapstructure:"shape"`
+	ShapeConfig                                   FlexShapeConfig                   `mapstructure:"shape_config"`
+	BootVolumeSizeInGBs                           int64                             `mapstructure:"disk_size"`
+	InstanceOptionsAreLegacyImdsEndpointsDisabled *bool                             `mapstructure:"instance_options_are_legacy_imds_endpoints_disabled" required:"false"`
 
 	// Metadata optionally contains custom metadata key/value pairs provided in the
 	// configuration. While this can be used to set metadata["user_data"] the explicit

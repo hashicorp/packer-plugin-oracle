@@ -418,6 +418,51 @@ func TestConfig(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("InstanceOptionsAreLegacyImdsEndpointsDisabledTrue", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+		raw["instance_options_are_legacy_imds_endpoints_disabled"] = true
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		if c.InstanceOptionsAreLegacyImdsEndpointsDisabled == nil || !*c.InstanceOptionsAreLegacyImdsEndpointsDisabled {
+			t.Errorf("Expected InstanceOptionsAreLegacyImdsEndpointsDisabled to be true, got %v", c.InstanceOptionsAreLegacyImdsEndpointsDisabled)
+		}
+	})
+
+	t.Run("InstanceOptionsAreLegacyImdsEndpointsDisabledFalse", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+		raw["instance_options_are_legacy_imds_endpoints_disabled"] = false
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		if c.InstanceOptionsAreLegacyImdsEndpointsDisabled == nil || *c.InstanceOptionsAreLegacyImdsEndpointsDisabled {
+			t.Errorf("Expected InstanceOptionsAreLegacyImdsEndpointsDisabled to be false, got %v", c.InstanceOptionsAreLegacyImdsEndpointsDisabled)
+		}
+	})
+
+	t.Run("InstanceOptionsAreLegacyImdsEndpointsDisabledNil", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+		// Do not set instance_options_are_legacy_imds_endpoints_disabled
+
+		var c Config
+		errs := c.Prepare(raw)
+		if errs != nil {
+			t.Fatalf("Unexpected error in configuration: %+v", errs)
+		}
+
+		if c.InstanceOptionsAreLegacyImdsEndpointsDisabled != nil {
+			t.Errorf("Expected InstanceOptionsAreLegacyImdsEndpointsDisabled to be nil, got %v", c.InstanceOptionsAreLegacyImdsEndpointsDisabled)
+		}
+	})
 }
 
 // BaseTestConfig creates the base (DEFAULT) config including a temporary key
