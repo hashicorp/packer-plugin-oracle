@@ -102,8 +102,11 @@ based on which authentication method is used.
   Principals](https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Tasks/callingservicesfrominstances.htm)
   instead of User Principals. If this key is set to true, setting any one of the `access_cfg_file`,
   `access_cfg_file_account`, `region`, `tenancy_ocid`, `user_ocid`, `key_file`, `fingerprint`,
-  `pass_phrase` parameters will cause an invalid configuration error.
+  `pass_phrase`, or `use_resource_principals` parameters will cause an invalid configuration error.
   Defaults to `false`.
+
+- `use_resource_principals` (boolean) - (Optional) Use Resource Principals for authentication. Resource Principals is a capability in Oracle Cloud Infrastructure Identity and Access Management (IAM) that allows resources (such as Functions, Data Flow applications, and API Gateways) to make service calls to other OCI services. This attribute is mutually exclusive with `access_cfg_file`, `access_cfg_file_account`, `user_ocid`, `tenancy_ocid`, `region`, `fingerprint`, `key_file`, `pass_phrase`, and `use_instance_principals`. Defaults to `false`.
+  To use resource principals, the resource running Packer (e.g., a Compute instance, a Function) must be part of a [Dynamic Group](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingdynamicgroups.htm) that has appropriate [Policies](https://docs.oracle.com/en-us/iaas/Content/Identity/Concepts/policygetstarted.htm) granting it permissions to manage resources (e.g., launch instances, create images).
 
 - `access_cfg_file` (string) - The path to the [OCI config
   file](https://docs.us-phoenix-1.oraclecloud.com/Content/API/Concepts/sdkconfig.htm).

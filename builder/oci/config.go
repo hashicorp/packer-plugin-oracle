@@ -79,6 +79,19 @@ type Config struct {
 	// - PassPhrase
 	InstancePrincipals bool `mapstructure:"use_instance_principals"`
 
+	// Resource Principals (OPTIONAL)
+	// If set to true the following can't have non empty values
+	// - AccessCfgFile
+	// - AccessCfgFileAccount
+	// - UserID
+	// - TenancyID
+	// - Region
+	// - Fingerprint
+	// - KeyFile
+	// - PassPhrase
+	// - InstancePrincipals
+	UseResourcePrincipals bool `mapstructure:"use_resource_principals"`
+
 	// If true, Packer will not create the image. Useful for setting to `true`
 	// during a build test stage. Default `false`.
 	SkipCreateImage bool `mapstructure:"skip_create_image" required:"false"`
@@ -187,12 +200,19 @@ func (c *Config) Prepare(raws ...interface{}) error {
 
 	var tenancyOCID string
 
-	if c.InstancePrincipals {
-		// We could go through all keys in one go and report that the below set
-		// of keys cannot coexist with use_instance_principals but decided to
-		// split them and report them seperately so that the user sees the specific
-		// key involved.
-		var message string = " cannot be present when use_instance_principals is set to true."
+	if c.InstancePrincipals && c.UseResourcePrincipals {
+		errs = packersdk.MultiErrorAppend(errs, errors.New("use_instance_principals and use_resource_principals cannot both be true"))
+	}
+
+	if c.InstancePrincipals || c.UseResourcePrincipals {
+		var authType string
+		if c.InstancePrincipals {
+			authType = "use_instance_principals"
+		} else {
+			authType = "use_resource_principals"
+		}
+
+		var message string = fmt.Sprintf(" cannot be present when %s is set to true.", authType)
 		if c.AccessCfgFile != "" {
 			errs = packersdk.MultiErrorAppend(errs, errors.New("access_cfg_file"+message))
 		}
@@ -217,22 +237,33 @@ func (c *Config) Prepare(raws ...interface{}) error {
 		if c.PassPhrase != "" {
 			errs = packersdk.MultiErrorAppend(errs, errors.New("pass_phrase"+message))
 		}
-		// This check is used to facilitate testing. During testing a Mock struct
-		// is assigned to c.configProvider otherwise testing fails because Instance
-		// Principals cannot be obtained.
+
 		if c.configProvider == nil {
-			// Even though the previous configuration checks might fail we don't want
-			// to skip this step. It seems that the logic behind the checks in this
-			// file is to check everything even getting the configProvider.
-			c.configProvider, err = ociauth.InstancePrincipalConfigurationProvider()
-			if err != nil {
-				return err
+			if c.InstancePrincipals {
+				c.configProvider, err = ociauth.InstancePrincipalConfigurationProvider()
+				if err != nil {
+					// Surface the error if we can't get a config provider.
+					// This typically happens when not running on an OCI instance.
+					errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("failed to get instance principal configuration provider: %w", err))
+				}
+			} else { // c.UseResourcePrincipals
+				c.configProvider, err = ociauth.ResourcePrincipalConfigurationProvider()
+				if err != nil {
+					// Surface the error if we can't get a config provider.
+					// This typically happens when the required environment variables are not set.
+					errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("failed to get resource principal configuration provider: %w", err))
+				}
 			}
 		}
-		tenancyOCID, err = c.configProvider.TenancyOCID()
-		if err != nil {
-			return err
+		// If configProvider is still nil due to an error, we can't proceed with TenancyOCID()
+		if c.configProvider != nil {
+			tenancyOCID, err = c.configProvider.TenancyOCID()
+			if err != nil {
+				// It's possible that TenancyOCID() fails even if the provider was created (e.g. permissions)
+				errs = packersdk.MultiErrorAppend(errs, fmt.Errorf("failed to get tenancy OCID from provider: %w", err))
+			}
 		}
+
 	} else {
 		// Determine where the SDK config is located
 		if c.AccessCfgFile == "" {

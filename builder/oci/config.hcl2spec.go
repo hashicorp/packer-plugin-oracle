@@ -68,6 +68,7 @@ type FlatConfig struct {
 	WinRMInsecure                                 *bool                  `mapstructure:"winrm_insecure" cty:"winrm_insecure" hcl:"winrm_insecure"`
 	WinRMUseNTLM                                  *bool                  `mapstructure:"winrm_use_ntlm" cty:"winrm_use_ntlm" hcl:"winrm_use_ntlm"`
 	InstancePrincipals                            *bool                  `mapstructure:"use_instance_principals" cty:"use_instance_principals" hcl:"use_instance_principals"`
+	UseResourcePrincipals                         *bool                  `mapstructure:"use_resource_principals" cty:"use_resource_principals" hcl:"use_resource_principals"`
 	SkipCreateImage                               *bool                  `mapstructure:"skip_create_image" required:"false" cty:"skip_create_image" hcl:"skip_create_image"`
 	AccessCfgFile                                 *string                `mapstructure:"access_cfg_file" cty:"access_cfg_file" hcl:"access_cfg_file"`
 	AccessCfgFileAccount                          *string                `mapstructure:"access_cfg_file_account" cty:"access_cfg_file_account" hcl:"access_cfg_file_account"`
@@ -173,6 +174,7 @@ func (*FlatConfig) HCL2Spec() map[string]hcldec.Spec {
 		"winrm_insecure":               &hcldec.AttrSpec{Name: "winrm_insecure", Type: cty.Bool, Required: false},
 		"winrm_use_ntlm":               &hcldec.AttrSpec{Name: "winrm_use_ntlm", Type: cty.Bool, Required: false},
 		"use_instance_principals":      &hcldec.AttrSpec{Name: "use_instance_principals", Type: cty.Bool, Required: false},
+		"use_resource_principals":      &hcldec.AttrSpec{Name: "use_resource_principals", Type: cty.Bool, Required: false},
 		"skip_create_image":            &hcldec.AttrSpec{Name: "skip_create_image", Type: cty.Bool, Required: false},
 		"access_cfg_file":              &hcldec.AttrSpec{Name: "access_cfg_file", Type: cty.String, Required: false},
 		"access_cfg_file_account":      &hcldec.AttrSpec{Name: "access_cfg_file_account", Type: cty.String, Required: false},
