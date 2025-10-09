@@ -419,6 +419,49 @@ func TestConfig(t *testing.T) {
 		})
 	}
 
+	// Test cases for use_resource_principals
+	for _, k := range invalidKeys {
+		t.Run(k+"_mixed_with_use_resource_principals", func(t *testing.T) {
+			raw := testConfig(cfgFile)
+			raw["use_resource_principals"] = "true"
+			raw[k] = "some_random_value"
+
+			var c Config
+			// We need to mock the config provider for resource principals as well,
+			// similar to how it's done for instance principals.
+			// Assuming a similar mock exists or can be created: resourcePrincipalConfigurationProviderMock
+			c.configProvider = instancePrincipalConfigurationProviderMock{} // Or a new mock for resource principals
+
+			errs := c.Prepare(raw)
+
+			if errs == nil {
+				t.Fatalf("Expected error when %s is mixed with use_resource_principals, but got none", k)
+			}
+			if !strings.Contains(errs.Error(), k) {
+				t.Errorf("Expected error message for %s to contain '%s', but got: %s", k, k, errs.Error())
+			}
+		})
+	}
+
+	t.Run("use_instance_principals_and_use_resource_principals_both_true", func(t *testing.T) {
+		raw := testConfig(cfgFile)
+		raw["use_instance_principals"] = "true"
+		raw["use_resource_principals"] = "true"
+
+		var c Config
+		c.configProvider = instancePrincipalConfigurationProviderMock{} // Mock provider
+
+		errs := c.Prepare(raw)
+
+		if errs == nil {
+			t.Fatal("Expected error when both use_instance_principals and use_resource_principals are true, but got none")
+		}
+		expectedErrorMsg := "use_instance_principals and use_resource_principals cannot both be true"
+		if !strings.Contains(errs.Error(), expectedErrorMsg) {
+			t.Errorf("Expected error message to contain '%s', but got: %s", expectedErrorMsg, errs.Error())
+		}
+	})
+
 	t.Run("InstanceOptionsAreLegacyImdsEndpointsDisabledTrue", func(t *testing.T) {
 		raw := testConfig(cfgFile)
 		raw["instance_options_are_legacy_imds_endpoints_disabled"] = true
