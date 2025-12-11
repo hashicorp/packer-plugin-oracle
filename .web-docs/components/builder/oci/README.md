@@ -136,7 +136,9 @@ or configured for the default OCI CLI authenticaton profile.
   if present. This cannot be used along with the `use_instance_principals` key.
 
 - `key` (string) - The contents of the OCI API signing key. Overrides value provided by the `key_file`.
-  This cannot be used along with the `use_instance_principals` key.
+  This cannot be used along with the `use_instance_principals` key. The `key` is meant to be used with dynamic secret fetching,
+  for example, [`aws_secretsmanager` function](https://developer.hashicorp.com/packer/docs/templates/hcl_templates/functions/contextual/aws_secretsmanager),
+  storing secrets in a versioning system should be avoided.
 
 - `key_file` (string) - Full path and filename of the OCI API signing key. Overrides value provided
   by the [OCI config file](https://docs.us-phoenix-1.oraclecloud.com/Content/API/Concepts/sdkconfig.htm)
