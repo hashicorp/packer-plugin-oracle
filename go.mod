@@ -1,8 +1,6 @@
 module github.com/hashicorp/packer-plugin-oracle
 
-go 1.23.0
-
-toolchain go1.23.7
+go 1.24.0
 
 require (
 	github.com/go-ini/ini v1.62.0
@@ -14,7 +12,7 @@ require (
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/stretchr/testify v1.10.0
 	github.com/zclconf/go-cty v1.13.3
-	golang.org/x/crypto v0.36.0
+	golang.org/x/crypto v0.46.0
 )
 
 require (
@@ -104,12 +102,12 @@ require (
 	github.com/vmihailenco/tagparser/v2 v2.0.0 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	golang.org/x/exp v0.0.0-20230321023759-10a507213a29 // indirect
-	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/net v0.47.0 // indirect
 	golang.org/x/oauth2 v0.13.0 // indirect
-	golang.org/x/sync v0.12.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
-	golang.org/x/term v0.30.0 // indirect
-	golang.org/x/text v0.23.0 // indirect
+	golang.org/x/sync v0.19.0 // indirect
+	golang.org/x/sys v0.39.0 // indirect
+	golang.org/x/term v0.38.0 // indirect
+	golang.org/x/text v0.32.0 // indirect
 	golang.org/x/time v0.11.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
 	google.golang.org/api v0.150.0 // indirect
